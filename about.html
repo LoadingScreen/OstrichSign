@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About · A short introduction to ring signatures — OstrichSign</title>
+<script>(function(){var t;try{t=localStorage.getItem('os-theme');}catch(e){}if(!t){t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',t);})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="nav">
+    <a class="wm" href="index.html">Ostrich<span class="ring">Sign</span></a>
+    <div class="links">
+      <a class="lnk" href="index.html">Home</a>
+      <a class="lnk on" href="about.html">About</a>
+      <a class="lnk" href="console.html">Console</a>
+      <a class="lnk" href="reading.html">Further reading</a>
+      <button id="themeBtn" class="themetoggle" onclick="toggleTheme()" aria-label="Switch theme">
+        <svg class="ic-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3 6.6 6.6 0 0 0 21 12.8z"/></svg>
+        <svg class="ic-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <article class="prose">
+    <h1>A short introduction to ring signatures</h1>
+    <p class="standfirst">How to prove a message came from inside a group, without revealing which member wrote it.</p>
+
+    <p>Most of the time, a signature is meant to tell you exactly who is speaking. You sign a message with your private key, and anyone who holds the matching public key can confirm that the message came from you and from no one else. That certainty is the entire point of an ordinary signature, but sometimes it's not quite what you want.</p>
+
+    <p>There are situations where you want to prove that a message came from <em>someone</em> within a particular group, while making it impossible to tell <em>which</em> member it was. A ring signature does exactly that. It lets you sign on behalf of a set of public keys — your own and any number of others — so that a verifier can confirm the signature was produced by one of those keys, and learns nothing more than that.</p>
+
+    <p>(If public and private keys are unfamiliar, <a href="https://www.youtube.com/watch?v=GSIDS_lvRv4" target="_blank" rel="noopener">a short refresher</a> will make the rest of this page easier to follow.)</p>
+
+
+    <p>Ring signatures were introduced in a 2001 paper by Rivest, Shamir, and Tauman, with the fitting title <em>How to Leak a Secret</em>. Their motivating example is a government insider who wants to pass a credible tip to a journalist. Sign it under your own name and the message carries real weight, but you have exposed yourself to retaliation. Send it anonymously and you are safe, but the journalist has little reason to believe you were ever in a position to know.</p>
+
+    <p>A ring signature can soften that tradeoff. The insider signs the message using their own key together with the public keys of several colleagues. The journalist can then verify that the message came from someone inside that circle — so the claim carries the standing of the group — and yet no one, the journalist included, can prove who actually wrote it. Put in one sentence: a ring signature lets you trade, person by person, between your anonymity and your credibility, instead of being forced to sacrifice all of one to keep the other.</p>
+
+
+    <p>A feature that often slips past even careful readers is that a ring requires no cooperation. You do not ask anyone's permission to include them. You simply collect their public keys and assemble the ring yourself. Only your own contribution to the signature is genuine; every other member's is, in effect, produced on their behalf by the mathematics. The other people named in your ring never agreed to be there, and may never even know they were. This feature is what makes ring signatures powerful for the person who needs cover. On the other hand, it means that the only sure way never to be named in someone's ring is never to publish a public key at all.</p>
+
+
+    <p>For a long time the idea stayed mostly theoretical, for a mundane reason: hardly anyone manages their own cryptographic keys anymore. We have handed our identities to services like Gmail, which is why a forgotten password is a minor nuisance rather than a disaster — and which also means there is no public key of ours lying around for anyone to build a ring from. <a href="https://nostr.com/" target="_blank" rel="noopener">Nostr</a> changes that. It is an open protocol whose users generate and hold their own keypairs, which means there is already a large and growing set of real, identity-linked public keys ready for forging into a ring signature.</p>
+
+    <p>The OstrichSign console is a way to work with that material directly, in your browser. You can generate or import Nostr keys, gather them into a ring, sign a message anonymously as one member, and verify signatures that other people produce. It is a graphical front end for the <a href="https://github.com/AbdelStark/nostringer" target="_blank" rel="noopener">nostringer</a> scheme, with every step running locally on your own machine.</p>
+
+    <h2>A few cautions before you try it</h2>
+    <ul>
+      <li>This is experimental and has not been through a formal security audit. Treat it as something to learn with, not something to lean on when the stakes are real.</li>
+      <li>Your Nostr keys are entirely your own responsibility. There is no recovery and no reset.</li>
+      <li>Relays can see who reads and writes through them. Anyone using this for genuine cover should connect through Tor or a VPN and choose relays with care, and should remember that deleting a note is only a request to the relays that hold it, never a guarantee.</li>
+      <li>Because rings are built without consent, anyone can be named in one — including alongside people they would rather not be grouped with.</li>
+    </ul>
+
+    <p>When you are ready, <a href="console.html">open the console</a> and build a ring.</p>
+  </article>
+
+  <footer>
+    <p>This is experimental, unaudited software meant for learning and exploration rather than
+    real-world use, and all of its cryptography runs locally in your browser so that no keys
+    ever leave the page.</p>
+    <p class="fnav"><a href="index.html">Home</a> · <a href="console.html">Console</a> · <a href="reading.html">Further reading</a></p>
+  </footer>
+
+</div>
+<script>
+function toggleTheme(){var h=document.documentElement,t=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',t);try{localStorage.setItem('os-theme',t);}catch(e){}}
+</script>
+</body>
+</html>
