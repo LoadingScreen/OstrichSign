@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OstrichSign · Ring Signature Console</title>
+<script>(function(){var t;try{t=localStorage.getItem('os-theme');}catch(e){}if(!t){t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',t);})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f3ea; --panel:#fdfbf5; --panel2:#efeadd; --line:#e2dccd;
+  --ink:#2c2a24; --dim:#6c685e; --dimmer:#9b9586;
+  --amber:#9a6b18; --amber-soft:rgba(154,107,24,.10); --amber-line:rgba(154,107,24,.32);
+  --green:#357a4a; --green-soft:rgba(53,122,74,.12);
+  --red:#b23a4b; --red-soft:rgba(178,58,75,.10);
+  --serif:'Spectral',Georgia,'Times New Roman',serif;
+  --display:'Spectral',Georgia,serif;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --input-bg:#fffdf8;
+}
+html[data-theme="dark"]{
+  --bg:#16140e; --panel:#1c1a13; --panel2:#221f17; --line:#2b2820;
+  --ink:#e8e3d6; --dim:#a39d8d; --dimmer:#736d5d;
+  --amber:#d8a948; --amber-soft:rgba(216,169,72,.12); --amber-line:rgba(216,169,72,.34);
+  --green:#6fcf8f; --green-soft:rgba(111,207,143,.12);
+  --red:#e8788a; --red-soft:rgba(232,120,138,.12);
+  --input-bg:#13110b;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--serif);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+body{min-height:100vh}
+.wrap{max-width:800px;margin:0 auto;padding:0 22px 90px}
+::selection{background:var(--amber-soft)}
+
+/* site nav */
+.sitenav{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;padding:24px 0 18px;margin-bottom:8px;border-bottom:1px solid var(--line)}
+.sitenav .wm{font-size:20px;font-weight:600;letter-spacing:.01em;color:var(--ink);text-decoration:none}
+.sitenav .wm .ring{color:var(--amber)}
+.sitenav .links{margin-left:auto;display:flex;align-items:baseline;gap:18px;flex-wrap:wrap}
+.sitenav a.lnk{font-size:15px;color:var(--dim);text-decoration:none}
+.sitenav a.lnk:hover{color:var(--ink)}
+.sitenav a.lnk.on{color:var(--amber)}
+.themetoggle{background:none;border:0;padding:2px;margin:0 0 0 2px;cursor:pointer;color:var(--dim);line-height:0;align-self:center}
+.themetoggle:hover{color:var(--ink)}
+.themetoggle .ic-sun{display:none}.themetoggle .ic-moon{display:inline}
+html[data-theme="dark"] .themetoggle .ic-sun{display:inline}
+html[data-theme="dark"] .themetoggle .ic-moon{display:none}
+
+/* header (title block, no box) */
+header{border:0;background:transparent}
+.hd{padding:30px 0 6px}
+.brandrow{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+h1{font-family:var(--display);font-weight:600;letter-spacing:-.01em;font-size:clamp(30px,6vw,48px);margin:0;color:var(--ink)}
+h1 .ring{color:var(--amber)}
+.tag{font-family:var(--mono);font-size:11.5px;color:var(--dimmer);letter-spacing:.02em}
+.sub{color:var(--dim);margin:16px 0 0;max-width:60ch;font-size:16px;line-height:1.62}
+.sub b{color:var(--ink);font-weight:600}
+.crumbs{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap;font-size:13px;color:var(--dimmer)}
+.crumbs span{border:1px solid var(--line);padding:3px 10px;border-radius:20px}
+.crumbs span.on{color:var(--green);border-color:var(--green-soft)}
+
+/* panels */
+.panel{border:1px solid var(--line);background:var(--panel);margin-top:22px;border-radius:5px}
+.phead{display:flex;align-items:baseline;gap:10px;padding:16px 20px 12px}
+.pnum{font-family:var(--display);font-weight:600;color:var(--amber);font-size:15px}
+.ptitle{font-family:var(--display);font-size:19px;font-weight:600;color:var(--ink)}
+.phint{margin-left:auto;color:var(--dim);font-size:13.5px;font-style:italic}
+.pbody{padding:4px 20px 20px}
+label.fld{display:block;font-size:14px;color:var(--dim);margin:0 0 7px}
+label.fld b{color:var(--amber);font-weight:600}
+textarea,input[type=text],select{
+  width:100%;background:var(--input-bg);color:var(--ink);border:1px solid var(--line);
+  font-family:var(--mono);font-size:13px;padding:10px 12px;border-radius:3px;outline:none;resize:vertical}
+textarea:focus,input:focus,select:focus{border-color:var(--amber-line);box-shadow:0 0 0 2px var(--amber-soft)}
+textarea{min-height:64px;line-height:1.5}
+select{appearance:none;cursor:pointer}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.grow{flex:1;min-width:160px}
+button{
+  font-family:var(--serif);font-size:15px;font-weight:500;cursor:pointer;
+  background:transparent;color:var(--ink);border:1px solid var(--line);padding:8px 16px;border-radius:3px;transition:.14s}
+button:hover{border-color:var(--amber-line);color:var(--amber);background:var(--amber-soft)}
+button.primary{background:var(--amber-soft);color:var(--amber);border-color:var(--amber-line);font-weight:600}
+button.primary:hover{background:var(--amber);color:var(--bg);border-color:var(--amber)}
+button.ghost{background:transparent;color:var(--dim)}
+button.ghost:hover{color:var(--amber)}
+button:disabled{opacity:.45;cursor:not-allowed}
+button:disabled:hover{border-color:var(--line);color:var(--ink);background:transparent}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:3px;overflow:hidden}
+.seg button{border:0;border-right:1px solid var(--line);border-radius:0;margin:0}
+.seg button:last-child{border-right:0}
+.seg button.act{background:var(--amber-soft);color:var(--amber)}
+
+/* identity list */
+.idlist{display:flex;flex-direction:column;gap:8px;margin-top:16px}
+.idrow{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;border:1px solid var(--line);background:var(--bg);padding:10px 12px;border-radius:4px}
+.idrow.signer{border-color:var(--amber-line);background:var(--amber-soft)}
+.idsel{display:flex;flex-direction:column;gap:6px;align-items:center}
+.idmeta{min-width:0}
+.idname{font-weight:600;font-size:15px}
+.idname .fmt{font-family:var(--mono);color:var(--dimmer);font-weight:400;font-size:10.5px;margin-left:6px;letter-spacing:.04em}
+.fmtmini{font-family:var(--mono);font-size:10.5px;letter-spacing:.02em;color:var(--amber);background:transparent;border:1px solid var(--line);border-radius:3px;padding:2px 7px;margin-left:8px;cursor:pointer;width:auto;min-width:0;appearance:none}
+.fmtmini:hover{border-color:var(--amber-line)}
+.exttag{font-family:var(--mono);color:var(--dimmer);font-weight:400;font-size:10.5px;margin-left:6px;letter-spacing:.04em}
+.idkey{font-family:var(--mono);color:var(--dim);font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+.idkey:hover{color:var(--amber)}
+.idactions{display:flex;gap:6px;align-items:center}
+.chk{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--dim);cursor:pointer;user-select:none}
+.chk input{accent-color:var(--amber);width:15px;height:15px;cursor:pointer}
+.iconbtn{padding:6px 11px;font-size:13px}
+.empty{color:var(--dimmer);font-size:14px;font-style:italic;padding:8px 0;line-height:1.55}
+
+/* output blocks */
+.out{margin-top:16px;border:1px solid var(--line);background:var(--bg);border-radius:4px;padding:14px}
+.outlabel{font-size:13px;color:var(--dim);margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+.sigtext{font-family:var(--mono);font-size:11.5px;word-break:break-all;color:var(--green);line-height:1.6}
+.meta{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font-size:13px;color:var(--dim)}
+.meta b{color:var(--ink);font-weight:600}
+/* verdict */
+.verdict{display:flex;align-items:center;gap:16px;border:1px solid var(--line);border-radius:4px;padding:18px;margin-top:16px;background:var(--bg)}
+.vbadge{font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:.02em;padding:6px 16px;border-radius:3px}
+.v-valid .vbadge{color:var(--green);border:1px solid var(--green-soft);background:var(--green-soft)}
+.v-invalid .vbadge{color:var(--red);border:1px solid var(--red-soft);background:var(--red-soft)}
+.v-idle .vbadge{color:var(--dimmer);border:1px solid var(--line)}
+.vtext{font-size:15px;color:var(--dim);line-height:1.55}
+.vtext b{color:var(--ink)}
+.note{font-size:14px;color:var(--dimmer);margin-top:12px;line-height:1.55}
+.note code{font-family:var(--mono);color:var(--amber);font-size:12.5px}
+.linkbadge{font-family:var(--display);font-weight:700;font-size:18px;letter-spacing:.02em}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--bg);padding:9px 18px;border-radius:4px;font-size:14px;font-weight:500;opacity:0;transition:.25s;pointer-events:none;z-index:50}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+footer{margin-top:40px;color:var(--dimmer);font-size:14px;line-height:1.68;border-top:1px solid var(--line);padding-top:20px}
+footer a{color:var(--amber);text-decoration:none}
+footer a:hover{text-decoration:underline}
+footer b{color:var(--dim);font-weight:600}
+footer code{font-family:var(--mono);color:var(--amber);font-size:12.5px}
+.kimg{font-family:var(--mono);font-size:10.5px;color:var(--dim);word-break:break-all;margin-top:6px}
+.kimg b{color:var(--ink)}
+@media(max-width:560px){
+  .idrow{grid-template-columns:auto 1fr;grid-template-areas:"sel meta" "act act"}
+  .idsel{grid-area:sel}.idmeta{grid-area:meta}.idactions{grid-area:act;justify-content:flex-start;margin-top:2px}
+  .sitenav .links{margin-left:0;width:100%}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="sitenav">
+    <a class="wm" href="index.html">Ostrich<span class="ring">Sign</span></a>
+    <div class="links">
+      <a class="lnk" href="index.html">Home</a>
+      <a class="lnk" href="about.html">About</a>
+      <a class="lnk on" href="console.html">Console</a>
+      <a class="lnk" href="reading.html">Further reading</a>
+      <button id="themeBtn" class="themetoggle" onclick="toggleTheme()" aria-label="Switch theme">
+        <svg class="ic-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3 6.6 6.6 0 0 0 21 12.8z"/></svg>
+        <svg class="ic-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+    </div>
+  </nav>
+  <header>
+    <div class="hd">
+      <div class="brandrow">
+        <h1>Ostrich<span class="ring">Sign</span></h1>
+        <span class="tag">secp256k1 · SAG ring signatures</span>
+      </div>
+      <p class="sub">Prove that <b>someone in a group</b> signed a message — without revealing <b>who</b>. Build a ring of Nostr public keys, sign anonymously with any member's private key, and let anyone verify the signature came from the ring.</p>
+      <div class="crumbs" id="crumbs">
+        <span id="cr-ids">0 identities</span>
+        <span id="cr-ring">ring: 0</span>
+        <span id="cr-sig">no signature</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- 01 IDENTITIES -->
+  <section class="panel">
+    <div class="phead"><span class="pnum">01</span><span class="ptitle">Identities &amp; Ring</span><span class="phint">order matters</span></div>
+    <div class="pbody">
+      <div class="row" style="align-items:flex-end">
+        <button class="primary" id="gen">+ Generate identity</button>
+        <div>
+          <label class="fld" for="fmtsel">Public-key format</label>
+          <select id="fmtsel" style="min-width:260px" title="How the public key is written. All three encode the same key.">
+            <option value="xonly">x-only — Nostr / npub style · 32 bytes</option>
+            <option value="compressed">compressed — Bitcoin style · 33 bytes</option>
+            <option value="uncompressed">uncompressed — full x,y point · 65 bytes</option>
+          </select>
+        </div>
+        <button class="ghost" id="seedDemo">Seed demo ring</button>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <input type="text" class="grow" id="importKey" placeholder="import npub / nsec / hex — nsec joins as a signer, npub widens the ring…">
+        <button id="importBtn">⤓ Import</button>
+      </div>
+      <div class="idlist" id="idlist"><div class="empty">No identities yet. Generate a few — each is a keypair you control. Tick the ones to include in the ring, then choose one to sign as.</div></div>
+    </div>
+  </section>
+
+  <!-- 02 SIGN -->
+  <section class="panel">
+    <div class="phead"><span class="pnum">02</span><span class="ptitle">Sign Anonymously</span><span class="phint" id="signerHint">no signer selected</span></div>
+    <div class="pbody">
+      <label class="fld" for="msg">Message</label>
+      <textarea id="msg">This is a secret message to the group.</textarea>
+      <div class="row" style="margin-top:12px;justify-content:flex-end">
+        <button class="primary" id="signBtn" disabled>▶ Sign</button>
+      </div>
+      <div id="signOut"></div>
+    </div>
+  </section>
+
+  <!-- 03 VERIFY -->
+  <section class="panel">
+    <div class="phead"><span class="pnum">03</span><span class="ptitle">Verify</span><span class="phint">anyone can run this</span></div>
+    <div class="pbody">
+      <label class="fld" for="vsig">Signature <span style="color:var(--dimmer)">(ringX…)</span></label>
+      <textarea id="vsig" placeholder="paste a signature, or sign one above"></textarea>
+      <div class="row" style="margin:6px 0 12px"><button class="ghost iconbtn" id="loadLast" disabled>↑ load last signature</button></div>
+      <label class="fld" for="vmsg">Message</label>
+      <textarea id="vmsg">This is a secret message to the group.</textarea>
+      <label class="fld" for="vring" style="margin-top:12px">Ring — one public key per line, <b style="color:var(--amber)">exact same order</b></label>
+      <textarea id="vring" style="min-height:90px" placeholder="public keys, one per line"></textarea>
+      <div class="row" style="margin:6px 0 0"><button class="ghost iconbtn" id="loadRing">↑ load current ring</button>
+      <button class="primary" id="verifyBtn">✓ Verify</button></div>
+      <div id="verifyOut"></div>
+    </div>
+  </section>
+
+  <footer>
+    Pure-JS reimplementation of the <a href="https://github.com/AbdelStark/nostringer-rs" target="_blank" rel="noopener">nostringer-rs</a> scheme — SAG ring signatures over secp256k1 — with <b>NIP-19</b> key import (npub/nsec) whose bech32 matches the official spec vectors. All cryptography runs in your browser; no keys ever leave this page. The <code>ringX</code> serialization is internally consistent but <b>not</b> byte-compatible with the upstream crate, and — like the original — this is <b>experimental, unaudited</b> code for learning, not production.
+  </footer>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   nostringer-js engine
+   Pure-JS secp256k1 + sync SHA-256 + SAG / BLSAG ring signatures
+   No external dependencies. Runs in Node and the browser.
+   ============================================================ */
+
+/* ---------- synchronous SHA-256 (returns Uint8Array) ---------- */
+const SHA256 = (() => {
+  const K = new Uint32Array([
+    0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,
+    0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,
+    0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,
+    0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,
+    0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,
+    0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,
+    0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,
+    0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2]);
+  const rotr = (x,n)=>(x>>>n)|(x<<(32-n));
+  return function sha256(msg){
+    const ml = msg.length;
+    const withOne = ml + 1;
+    const k = (56 - (withOne % 64) + 64) % 64;
+    const total = withOne + k + 8;
+    const b = new Uint8Array(total);
+    b.set(msg); b[ml] = 0x80;
+    const bitLen = ml * 8;
+    // big-endian 64-bit length (high 32 bits assumed 0 for our sizes)
+    b[total-4] = (bitLen>>>24)&0xff; b[total-3] = (bitLen>>>16)&0xff;
+    b[total-2] = (bitLen>>>8)&0xff;  b[total-1] = bitLen&0xff;
+    let h0=0x6a09e667,h1=0xbb67ae85,h2=0x3c6ef372,h3=0xa54ff53a,
+        h4=0x510e527f,h5=0x9b05688c,h6=0x1f83d9ab,h7=0x5be0cd19;
+    const w = new Uint32Array(64);
+    for(let i=0;i<total;i+=64){
+      for(let t=0;t<16;t++){
+        w[t]=(b[i+4*t]<<24)|(b[i+4*t+1]<<16)|(b[i+4*t+2]<<8)|(b[i+4*t+3]);
+      }
+      for(let t=16;t<64;t++){
+        const s0=rotr(w[t-15],7)^rotr(w[t-15],18)^(w[t-15]>>>3);
+        const s1=rotr(w[t-2],17)^rotr(w[t-2],19)^(w[t-2]>>>10);
+        w[t]=(w[t-16]+s0+w[t-7]+s1)|0;
+      }
+      let a=h0,bb=h1,c=h2,d=h3,e=h4,f=h5,g=h6,hh=h7;
+      for(let t=0;t<64;t++){
+        const S1=rotr(e,6)^rotr(e,11)^rotr(e,25);
+        const ch=(e&f)^((~e)&g);
+        const t1=(hh+S1+ch+K[t]+w[t])|0;
+        const S0=rotr(a,2)^rotr(a,13)^rotr(a,22);
+        const maj=(a&bb)^(a&c)^(bb&c);
+        const t2=(S0+maj)|0;
+        hh=g;g=f;f=e;e=(d+t1)|0;d=c;c=bb;bb=a;a=(t1+t2)|0;
+      }
+      h0=(h0+a)|0;h1=(h1+bb)|0;h2=(h2+c)|0;h3=(h3+d)|0;
+      h4=(h4+e)|0;h5=(h5+f)|0;h6=(h6+g)|0;h7=(h7+hh)|0;
+    }
+    const out=new Uint8Array(32);
+    [h0,h1,h2,h3,h4,h5,h6,h7].forEach((h,i)=>{
+      out[4*i]=(h>>>24)&0xff;out[4*i+1]=(h>>>16)&0xff;out[4*i+2]=(h>>>8)&0xff;out[4*i+3]=h&0xff;
+    });
+    return out;
+  };
+})();
+
+/* ---------- hex / byte helpers ---------- */
+function bytesToHex(b){let s='';for(let i=0;i<b.length;i++)s+=b[i].toString(16).padStart(2,'0');return s;}
+function hexToBytes(h){
+  if(h.length%2)throw new Error('odd hex length');
+  const b=new Uint8Array(h.length/2);
+  for(let i=0;i<b.length;i++)b[i]=parseInt(h.substr(2*i,2),16);
+  return b;
+}
+function bytesToBig(b){let x=0n;for(let i=0;i<b.length;i++)x=(x<<8n)|BigInt(b[i]);return x;}
+function bigToBytes32(x){
+  const b=new Uint8Array(32);
+  for(let i=31;i>=0;i--){b[i]=Number(x&0xffn);x>>=8n;}
+  return b;
+}
+function concatBytes(...arrs){
+  let len=0;for(const a of arrs)len+=a.length;
+  const out=new Uint8Array(len);let o=0;
+  for(const a of arrs){out.set(a,o);o+=a.length;}
+  return out;
+}
+
+/* ---------- secp256k1 field + group ---------- */
+const P = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2Fn;
+const N = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141n;
+const Gx = 0x79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798n;
+const Gy = 0x483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8n;
+const B = 7n;
+
+function mod(a,m){const r=a%m;return r>=0n?r:r+m;}
+function modP(a){return mod(a,P);}
+function modN(a){return mod(a,N);}
+function powMod(base,exp,m){
+  base=mod(base,m);let r=1n;
+  while(exp>0n){if(exp&1n)r=(r*base)%m;base=(base*base)%m;exp>>=1n;}
+  return r;
+}
+function invMod(a,m){
+  // extended euclid
+  let [old_r,r]=[mod(a,m),m];
+  let [old_s,s]=[1n,0n];
+  while(r!==0n){const q=old_r/r;[old_r,r]=[r,old_r-q*r];[old_s,s]=[s,old_s-q*s];}
+  return mod(old_s,m);
+}
+function sqrtP(a){ // p ≡ 3 mod 4
+  return powMod(a,(P+1n)/4n,P);
+}
+
+/* Jacobian point: {X,Y,Z}; identity has Z=0 */
+const ZERO = {X:0n,Y:1n,Z:0n};
+function isZero(pt){return pt.Z===0n;}
+function jDouble(p){
+  if(p.Z===0n)return ZERO;
+  const {X,Y,Z}=p;
+  const A=modP(X*X);
+  const Bv=modP(Y*Y);
+  const C=modP(Bv*Bv);
+  let D=modP(2n*(modP((X+Bv)*(X+Bv))-A-C));
+  const E=modP(3n*A);
+  const F=modP(E*E);
+  const X3=modP(F-2n*D);
+  const Y3=modP(E*(D-X3)-8n*C);
+  const Z3=modP(2n*Y*Z);
+  return {X:X3,Y:Y3,Z:Z3};
+}
+function jAdd(p,q){
+  if(p.Z===0n)return q;
+  if(q.Z===0n)return p;
+  const Z1Z1=modP(p.Z*p.Z);
+  const Z2Z2=modP(q.Z*q.Z);
+  const U1=modP(p.X*Z2Z2);
+  const U2=modP(q.X*Z1Z1);
+  const S1=modP(p.Y*q.Z*Z2Z2);
+  const S2=modP(q.Y*p.Z*Z1Z1);
+  if(U1===U2){
+    if(S1!==S2)return ZERO;
+    return jDouble(p);
+  }
+  const H=modP(U2-U1);
+  const I=modP((2n*H)*(2n*H));
+  const J=modP(H*I);
+  const r=modP(2n*(S2-S1));
+  const V=modP(U1*I);
+  const X3=modP(r*r-J-2n*V);
+  const Y3=modP(r*(V-X3)-2n*S1*J);
+  const Z3=modP(((p.Z+q.Z)*(p.Z+q.Z)-Z1Z1-Z2Z2)*H);
+  return {X:X3,Y:Y3,Z:Z3};
+}
+function jMul(k,p){
+  k=mod(k,N);
+  let r=ZERO,addend=p;
+  while(k>0n){
+    if(k&1n)r=jAdd(r,addend);
+    addend=jDouble(addend);
+    k>>=1n;
+  }
+  return r;
+}
+function toAffine(p){
+  if(p.Z===0n)return null; // infinity
+  const zinv=invMod(p.Z,P);
+  const zinv2=modP(zinv*zinv);
+  const zinv3=modP(zinv2*zinv);
+  return {x:modP(p.X*zinv2),y:modP(p.Y*zinv3)};
+}
+function affineToJ(a){return {X:a.x,Y:a.y,Z:1n};}
+const G = {X:Gx,Y:Gy,Z:1n};
+
+/* point <-> compressed pubkey bytes (33 bytes) */
+function pointToCompressed(pt){
+  const a=toAffine(pt);
+  if(!a)throw new Error('infinity has no encoding');
+  const out=new Uint8Array(33);
+  out[0]=(a.y&1n)===0n?0x02:0x03;
+  out.set(bigToBytes32(a.x),1);
+  return out;
+}
+function liftX(x){ // returns affine with even y, or null
+  if(x>=P)return null;
+  const y2=modP(x*x*x+B);
+  const y=sqrtP(y2);
+  if(modP(y*y)!==y2)return null;
+  return {x, y:(y&1n)===0n?y:P-y};
+}
+function compressedToPoint(b){
+  if(b.length!==33||(b[0]!==2&&b[0]!==3))throw new Error('bad compressed point');
+  const x=bytesToBig(b.subarray(1));
+  const lifted=liftX(x);
+  if(!lifted)throw new Error('x not on curve');
+  let y=lifted.y;
+  if((y&1n)!==BigInt(b[0]-2))y=P-y;
+  return {X:x,Y:y,Z:1n};
+}
+
+/* parse a public key hex in x-only(64) / compressed(66) / uncompressed(130) -> Jacobian */
+function parsePubkeyHex(hex){
+  hex=hex.trim().toLowerCase();
+  if(hex.length===64){ // x-only -> assume even y (BIP340 / Nostr convention)
+    const x=BigInt('0x'+hex);
+    const lifted=liftX(x);
+    if(!lifted)throw new Error('x-only key not on curve');
+    return {X:lifted.x,Y:lifted.y,Z:1n};
+  }
+  if(hex.length===66){return compressedToPoint(hexToBytes(hex));}
+  if(hex.length===130){
+    if(!hex.startsWith('04'))throw new Error('bad uncompressed prefix');
+    const x=BigInt('0x'+hex.slice(2,66));
+    const y=BigInt('0x'+hex.slice(66));
+    return {X:x,Y:y,Z:1n};
+  }
+  throw new Error('pubkey hex must be 64, 66, or 130 chars');
+}
+
+/* ---------- key generation ---------- */
+function randScalar(){
+  // rejection sample in [1, N-1]
+  while(true){
+    const b=randomBytes(32);
+    const x=mod(bytesToBig(b),N);
+    if(x!==0n)return x;
+  }
+}
+let randomBytes;
+if(typeof window!=='undefined'&&window.crypto&&window.crypto.getRandomValues){
+  randomBytes=(n)=>{const b=new Uint8Array(n);window.crypto.getRandomValues(b);return b;};
+}else{
+  const nodeCrypto=require('crypto');
+  randomBytes=(n)=>new Uint8Array(nodeCrypto.randomBytes(n));
+}
+
+function generateKeypairHex(format='xonly'){
+  const sk=randScalar();
+  const pub=jMul(sk,G);
+  const aff=toAffine(pub);
+  const skHex=bytesToHex(bigToBytes32(sk));
+  let pubHex;
+  if(format==='xonly'){
+    // BIP340: x-only with implicit even y -> if y is odd, negate sk
+    let realSk=sk, realAff=aff;
+    if((aff.y&1n)===1n){
+      realSk=modN(N-sk);
+      const p2=toAffine(jMul(realSk,G));
+      realAff=p2;
+    }
+    pubHex=bytesToHex(bigToBytes32(realAff.x));
+    return {private_key_hex:bytesToHex(bigToBytes32(realSk)),public_key_hex:pubHex,format};
+  }else if(format==='compressed'){
+    pubHex=bytesToHex(pointToCompressed(pub));
+  }else if(format==='uncompressed'){
+    pubHex='04'+bytesToHex(bigToBytes32(aff.x))+bytesToHex(bigToBytes32(aff.y));
+  }else throw new Error('unknown format');
+  return {private_key_hex:skHex,public_key_hex:pubHex,format};
+}
+
+/* ---------- hashing helpers ---------- */
+const enc=new TextEncoder();
+function hashToScalar(...chunks){
+  return modN(bytesToBig(SHA256(concatBytes(...chunks))));
+}
+// canonical ring serialization: concat of compressed points
+function ringBytes(ringPts){
+  return concatBytes(...ringPts.map(pointToCompressed));
+}
+function msgToBytes(message){
+  return (message instanceof Uint8Array)?message:enc.encode(String(message));
+}
+
+/* hash_to_point via try-and-increment (internal, secp256k1) */
+function hashToPoint(pt){
+  let h=SHA256(concatBytes(enc.encode('nostringer-js/h2p'),pointToCompressed(pt)));
+  for(let ctr=0;ctr<10000;ctr++){
+    const x=mod(bytesToBig(h),P);
+    const lifted=liftX(x);
+    if(lifted)return {X:lifted.x,Y:lifted.y,Z:1n};
+    h=SHA256(h);
+  }
+  throw new Error('hashToPoint failed');
+}
+
+/* ---------- normalize a ring (hex -> points), and validate ---------- */
+function buildRing(ringPubkeysHex){
+  if(ringPubkeysHex.length<2)throw new Error('ring needs at least 2 members');
+  return ringPubkeysHex.map(parsePubkeyHex);
+}
+// derive the public point that a private key maps to, choosing the representation
+// that actually appears in the ring (handles x-only even-y convention)
+function findSignerIndex(skHex, ringPts){
+  const sk=BigInt('0x'+skHex.trim());
+  const candidates=[];
+  const p1=jMul(sk,G); candidates.push({sk:modN(sk),pt:p1});
+  const p2=jMul(modN(N-sk),G); candidates.push({sk:modN(N-sk),pt:p2});
+  for(const cand of candidates){
+    const cx=toAffine(cand.pt).x, cy=toAffine(cand.pt).y;
+    for(let i=0;i<ringPts.length;i++){
+      const a=toAffine(ringPts[i]);
+      if(a.x===cx&&a.y===cy)return {index:i,sk:cand.sk};
+    }
+  }
+  return {index:-1,sk:modN(sk)};
+}
+
+const DOMAIN_SAG=enc.encode('nostringer-js/sag/v1');
+const DOMAIN_BLSAG=enc.encode('nostringer-js/blsag/v1');
+
+/* ---------- SAG (unlinkable) ---------- */
+function signSag(message, skHex, ringPubkeysHex){
+  const ringPts=buildRing(ringPubkeysHex);
+  const n=ringPts.length;
+  const {index:pi, sk}=findSignerIndex(skHex, ringPts);
+  if(pi<0)throw new Error("signer's public key is not in the ring");
+  const m=msgToBytes(message);
+  const rB=ringBytes(ringPts);
+
+  const c=new Array(n).fill(0n);
+  const s=new Array(n).fill(0n);
+
+  const alpha=randScalar();
+  let L=jMul(alpha,G);
+  c[(pi+1)%n]=hashToScalar(DOMAIN_SAG,rB,m,pointToCompressed(L));
+
+  for(let k=1;k<n;k++){
+    const i=(pi+k)%n;
+    s[i]=randScalar();
+    // L = s[i]*G + c[i]*P_i
+    const Li=jAdd(jMul(s[i],G), jMul(c[i],ringPts[i]));
+    c[(i+1)%n]=hashToScalar(DOMAIN_SAG,rB,m,pointToCompressed(Li));
+  }
+  s[pi]=modN(alpha - modN(c[pi]*sk));
+
+  return {variant:'SAG', c0:c[0], s, n};
+}
+function verifySag(sig, message, ringPubkeysHex){
+  const ringPts=buildRing(ringPubkeysHex);
+  const n=ringPts.length;
+  if(sig.s.length!==n)return false;
+  const m=msgToBytes(message);
+  const rB=ringBytes(ringPts);
+  let c=sig.c0;
+  for(let i=0;i<n;i++){
+    const Li=jAdd(jMul(sig.s[i],G), jMul(c,ringPts[i]));
+    c=hashToScalar(DOMAIN_SAG,rB,m,pointToCompressed(Li));
+  }
+  return c===sig.c0;
+}
+
+/* ---------- BLSAG (linkable) ---------- */
+function signBlsag(message, skHex, ringPubkeysHex){
+  const ringPts=buildRing(ringPubkeysHex);
+  const n=ringPts.length;
+  const {index:pi, sk}=findSignerIndex(skHex, ringPts);
+  if(pi<0)throw new Error("signer's public key is not in the ring");
+  const m=msgToBytes(message);
+
+  const Hp_signer=hashToPoint(ringPts[pi]);
+  const I=jMul(sk,Hp_signer); // key image
+
+  const c=new Array(n).fill(0n);
+  const s=new Array(n).fill(0n);
+
+  const alpha=randScalar();
+  const L0=jMul(alpha,G);
+  const R0=jMul(alpha,Hp_signer);
+  c[(pi+1)%n]=hashToScalar(DOMAIN_BLSAG,m,pointToCompressed(L0),pointToCompressed(R0));
+
+  for(let k=1;k<n;k++){
+    const i=(pi+k)%n;
+    s[i]=randScalar();
+    const Hp_i=hashToPoint(ringPts[i]);
+    const Li=jAdd(jMul(s[i],G), jMul(c[i],ringPts[i]));
+    const Ri=jAdd(jMul(s[i],Hp_i), jMul(c[i],I));
+    c[(i+1)%n]=hashToScalar(DOMAIN_BLSAG,m,pointToCompressed(Li),pointToCompressed(Ri));
+  }
+  s[pi]=modN(alpha - modN(c[pi]*sk));
+
+  return {variant:'BLSAG', c0:c[0], s, n, keyImage:pointToCompressed(I)};
+}
+function verifyBlsag(sig, message, ringPubkeysHex){
+  const ringPts=buildRing(ringPubkeysHex);
+  const n=ringPts.length;
+  if(sig.s.length!==n)return false;
+  const m=msgToBytes(message);
+  let I;
+  try{I=compressedToPoint(sig.keyImage);}catch(e){return false;}
+  let c=sig.c0;
+  for(let i=0;i<n;i++){
+    const Hp_i=hashToPoint(ringPts[i]);
+    const Li=jAdd(jMul(sig.s[i],G), jMul(c,ringPts[i]));
+    const Ri=jAdd(jMul(sig.s[i],Hp_i), jMul(c,I));
+    c=hashToScalar(DOMAIN_BLSAG,m,pointToCompressed(Li),pointToCompressed(Ri));
+  }
+  return c===sig.c0;
+}
+
+/* ---------- compact "ringX..." serialization ---------- */
+// layout: tag byte (0=SAG,1=BLSAG) | c0(32) | n is implicit by ring | s[0..n](32 each) | [keyImage(33) if BLSAG]
+function serializeSig(sig){
+  const tag=new Uint8Array([sig.variant==='SAG'?0:1]);
+  const parts=[tag, bigToBytes32(sig.c0), ...sig.s.map(bigToBytes32)];
+  if(sig.variant==='BLSAG')parts.push(sig.keyImage);
+  const raw=concatBytes(...parts);
+  return 'ringX'+bytesToHex(raw);
+}
+function deserializeSig(str){
+  if(!str.startsWith('ringX'))throw new Error('not a ringX signature');
+  const raw=hexToBytes(str.slice(5));
+  const tag=raw[0];
+  const variant=tag===0?'SAG':'BLSAG';
+  const body=raw.subarray(1);
+  let n, keyImage=null;
+  if(variant==='SAG'){
+    n=(body.length/32)-1;
+  }else{
+    n=((body.length-33)/32)-1;
+    keyImage=body.subarray(body.length-33);
+  }
+  const c0=bytesToBig(body.subarray(0,32));
+  const s=[];
+  for(let i=0;i<n;i++)s.push(bytesToBig(body.subarray(32*(i+1),32*(i+2))));
+  return {variant,c0,s,n,keyImage};
+}
+
+/* ---------- top-level convenience ---------- */
+function sign(message, skHex, ringPubkeysHex, variant='SAG'){
+  const sig=(variant.toUpperCase()==='BLSAG')
+    ? signBlsag(message, skHex, ringPubkeysHex)
+    : signSag(message, skHex, ringPubkeysHex);
+  return serializeSig(sig);
+}
+function verify(sigStr, message, ringPubkeysHex){
+  const sig=deserializeSig(sigStr);
+  return sig.variant==='BLSAG'
+    ? verifyBlsag(sig, message, ringPubkeysHex)
+    : verifySag(sig, message, ringPubkeysHex);
+}
+function keyImageOf(sigStr){
+  const sig=deserializeSig(sigStr);
+  return sig.keyImage?bytesToHex(sig.keyImage):null;
+}
+function keyImagesMatch(sigA, sigB){
+  const a=keyImageOf(sigA), b=keyImageOf(sigB);
+  return !!a && !!b && a===b;
+}
+
+/* =====================================================================
+   NIP-19 bech32 (npub / nsec / note / nprofile / nevent)
+   ===================================================================== */
+const BECH_CHARSET='qpzry9x8gf2tvdw0s3jn54khce6mua7l';
+function bechPolymod(values){
+  const GEN=[0x3b6a57b2,0x26508e6d,0x1ea119fa,0x3d4233dd,0x2a1462b3];
+  let chk=1;
+  for(const v of values){
+    const b=chk>>>25;
+    chk=(((chk&0x1ffffff)<<5)^v)>>>0;
+    for(let i=0;i<5;i++) if((b>>i)&1) chk=(chk^GEN[i])>>>0;
+  }
+  return chk>>>0;
+}
+function bechHrpExpand(hrp){
+  const r=[];
+  for(let i=0;i<hrp.length;i++)r.push(hrp.charCodeAt(i)>>5);
+  r.push(0);
+  for(let i=0;i<hrp.length;i++)r.push(hrp.charCodeAt(i)&31);
+  return r;
+}
+function bechVerify(hrp,data){return bechPolymod(bechHrpExpand(hrp).concat(data))===1;}
+function bechCreate(hrp,data){
+  const values=bechHrpExpand(hrp).concat(data).concat([0,0,0,0,0,0]);
+  const mod=bechPolymod(values)^1;
+  const r=[];for(let i=0;i<6;i++)r.push((mod>>(5*(5-i)))&31);
+  return r;
+}
+function bech32Encode(hrp,data){
+  const combined=data.concat(bechCreate(hrp,data));
+  let s=hrp+'1';for(const d of combined)s+=BECH_CHARSET[d];return s;
+}
+function bech32Decode(str){
+  str=str.trim();
+  if(str!==str.toLowerCase()&&str!==str.toUpperCase())throw new Error('mixed case');
+  str=str.toLowerCase();
+  const pos=str.lastIndexOf('1');
+  if(pos<1||pos+7>str.length)throw new Error('malformed bech32');
+  const hrp=str.slice(0,pos);
+  const data=[];
+  for(let i=pos+1;i<str.length;i++){
+    const d=BECH_CHARSET.indexOf(str[i]);
+    if(d===-1)throw new Error('invalid bech32 character');
+    data.push(d);
+  }
+  if(!bechVerify(hrp,data))throw new Error('bad checksum');
+  return {hrp,data:data.slice(0,-6)};
+}
+function convertBits(data,from,to,pad){
+  let acc=0,bits=0;const ret=[];const maxv=(1<<to)-1;
+  for(const value of data){
+    if(value<0||(value>>from)!==0)throw new Error('convertBits: value out of range');
+    acc=((acc<<from)|value)>>>0;bits+=from;
+    while(bits>=to){bits-=to;ret.push((acc>>bits)&maxv);}
+  }
+  if(pad){if(bits>0)ret.push((acc<<(to-bits))&maxv);}
+  else if(bits>=from||((acc<<(to-bits))&maxv))throw new Error('convertBits: bad padding');
+  return ret;
+}
+// Decode an npub/nsec/note/nprofile/nevent. Returns {type, hex}.
+function decodeNostrEntity(str){
+  const {hrp,data}=bech32Decode(str);
+  const bytes=Uint8Array.from(convertBits(data,5,8,false));
+  if(hrp==='npub')return {type:'npub',hex:bytesToHex(bytes)};
+  if(hrp==='nsec')return {type:'nsec',hex:bytesToHex(bytes)};
+  if(hrp==='note')return {type:'note',hex:bytesToHex(bytes)};
+  if(hrp==='nprofile'||hrp==='nevent'){
+    // TLV: take first type-0 record (the 32-byte special value)
+    let i=0;
+    while(i+2<=bytes.length){
+      const t=bytes[i], l=bytes[i+1], v=bytes.subarray(i+2,i+2+l);
+      if(t===0)return {type:hrp,hex:bytesToHex(v)};
+      i+=2+l;
+    }
+    throw new Error('no primary value in '+hrp);
+  }
+  throw new Error('unsupported entity: '+hrp);
+}
+function encodeBech32From32(hrp,hex){
+  const bytes=hexToBytes(hex.trim().toLowerCase());
+  if(bytes.length!==32)throw new Error('expected 32-byte hex');
+  return bech32Encode(hrp,convertBits(Array.from(bytes),8,5,true));
+}
+function npubEncode(hex){return encodeBech32From32('npub',hex);}
+function nsecEncode(hex){return encodeBech32From32('nsec',hex);}
+function noteEncode(hex){return encodeBech32From32('note',hex);}
+
+/* =====================================================================
+   BIP-340 Schnorr (so events are valid & relay-publishable)
+   ===================================================================== */
+function xorBytes(a,b){const o=new Uint8Array(a.length);for(let i=0;i<a.length;i++)o[i]=a[i]^b[i];return o;}
+function taggedHash(tag,msg){
+  const th=SHA256(enc.encode(tag));
+  return SHA256(concatBytes(th,th,msg));
+}
+// x-only pubkey (32-byte hex) for a private key hex
+function xonlyPubFromPriv(skHex){
+  const d0=BigInt('0x'+skHex.trim());
+  if(d0<=0n||d0>=N)throw new Error('private key out of range');
+  const Paff=toAffine(jMul(d0,G));
+  return bytesToHex(bigToBytes32(Paff.x));
+}
+function schnorrSign(msg32, skHex, auxBytes){
+  const d0=BigInt('0x'+skHex.trim());
+  if(d0<=0n||d0>=N)throw new Error('private key out of range');
+  const Paff=toAffine(jMul(d0,G));
+  const d=(Paff.y&1n)===0n?d0:(N-d0);
+  const px=bigToBytes32(Paff.x);
+  const aux=auxBytes||new Uint8Array(32); // deterministic when zero
+  const t=xorBytes(bigToBytes32(d), taggedHash('BIP0340/aux',aux));
+  const rand=taggedHash('BIP0340/nonce', concatBytes(t,px,msg32));
+  let k0=modN(bytesToBig(rand));
+  if(k0===0n)throw new Error('nonce is zero');
+  const Raff=toAffine(jMul(k0,G));
+  const k=(Raff.y&1n)===0n?k0:(N-k0);
+  const rx=bigToBytes32(Raff.x);
+  const e=modN(bytesToBig(taggedHash('BIP0340/challenge', concatBytes(rx,px,msg32))));
+  const s=modN(k+e*d);
+  return bytesToHex(concatBytes(rx, bigToBytes32(s)));
+}
+function schnorrVerify(msg32, pubHex, sigHex){
+  const sig=hexToBytes(sigHex);
+  if(sig.length!==64)return false;
+  const px=BigInt('0x'+pubHex.trim());
+  if(px>=P)return false;
+  const lifted=liftX(px); // even-y lift, per BIP-340
+  if(!lifted)return false;
+  const Ppt={X:lifted.x,Y:lifted.y,Z:1n};
+  const r=bytesToBig(sig.subarray(0,32));
+  const s=bytesToBig(sig.subarray(32,64));
+  if(r>=P||s>=N)return false;
+  const e=modN(bytesToBig(taggedHash('BIP0340/challenge',
+    concatBytes(bigToBytes32(r),bigToBytes32(px),msg32))));
+  // R = s*G - e*P
+  const R=jAdd(jMul(s,G), jMul(modN(N-e),Ppt));
+  const Raff=toAffine(R);
+  if(!Raff)return false;
+  if((Raff.y&1n)!==0n)return false;
+  return Raff.x===r;
+}
+
+/* =====================================================================
+   NIP-01 event id + ring-signed anonymous events
+   ===================================================================== */
+function eventId(ev){
+  // serialized = [0, pubkey, created_at, kind, tags, content]
+  const serial=JSON.stringify([0, ev.pubkey, ev.created_at, ev.kind, ev.tags, ev.content]);
+  return bytesToHex(SHA256(enc.encode(serial)));
+}
+// Build a complete, valid, publishable Nostr event whose authorship is proven
+// by a ring signature (in tags) while the envelope is signed by a throwaway key.
+function buildRingSignedEvent(opts){
+  // opts: {content, kind, created_at, signerPrivHex, ringPubkeysHex, variant}
+  const content=opts.content;
+  const kind=opts.kind??1;
+  const created_at=opts.created_at??Math.floor(Date.now()/1000);
+  const variant=(opts.variant||'SAG').toUpperCase();
+  const ring=opts.ringPubkeysHex;
+  // 1) ring-sign the content
+  const ringSig=sign(content, opts.signerPrivHex, ring, variant);
+  // 2) ephemeral keypair for the envelope (anonymous author)
+  const eph=generateKeypairHex('xonly');
+  const pubkey=eph.public_key_hex; // x-only
+  // 3) tags carry the ring proof
+  const tags=[
+    ['nostringer','v1',variant],
+    ['ring_sig',ringSig],
+    ...ring.map(pk=>['ring_pubkey',pk]),
+  ];
+  // 4) assemble + id + envelope schnorr sig
+  const base={pubkey,created_at,kind,tags,content};
+  const id=eventId(base);
+  const sig=schnorrSign(hexToBytes(id), eph.private_key_hex);
+  return {id, pubkey, created_at, kind, tags, content, sig,
+          _ephemeral_npub:npubEncode(pubkey), _ring_variant:variant};
+}
+// Verify both layers of a ring-signed event.
+function verifyRingSignedEvent(ev){
+  const result={envelope:false, ring:false, idOk:false, variant:null, ringSize:0, errors:[]};
+  try{
+    const recomputed=eventId({pubkey:ev.pubkey,created_at:ev.created_at,kind:ev.kind,tags:ev.tags,content:ev.content});
+    result.idOk = recomputed===ev.id;
+    if(!result.idOk)result.errors.push('event id mismatch');
+  }catch(e){result.errors.push('id: '+e.message);}
+  try{ result.envelope=schnorrVerify(hexToBytes(ev.id), ev.pubkey, ev.sig);
+       if(!result.envelope)result.errors.push('envelope schnorr sig invalid');
+  }catch(e){result.errors.push('envelope: '+e.message);}
+  try{
+    const sigTag=(ev.tags||[]).find(t=>t[0]==='ring_sig');
+    const ring=(ev.tags||[]).filter(t=>t[0]==='ring_pubkey').map(t=>t[1]);
+    result.ringSize=ring.length;
+    const vTag=(ev.tags||[]).find(t=>t[0]==='nostringer');
+    result.variant=vTag?vTag[2]:(sigTag?deserializeSig(sigTag[1]).variant:null);
+    if(!sigTag)throw new Error('no ring_sig tag');
+    if(ring.length<2)throw new Error('ring too small');
+    result.ring=verify(sigTag[1], ev.content, ring);
+    if(!result.ring)result.errors.push('ring signature does not verify over content+ring');
+  }catch(e){result.errors.push('ring: '+e.message);}
+  result.valid=result.idOk&&result.envelope&&result.ring;
+  return result;
+}
+
+/* =====================================================================
+   Public-key format conversion (re-encode the same key/point)
+   ===================================================================== */
+function encodePointHex(aff, fmt){
+  const xh=bytesToHex(bigToBytes32(aff.x));
+  if(fmt==='xonly')return xh;
+  if(fmt==='compressed')return ((aff.y&1n)===0n?'02':'03')+xh;
+  if(fmt==='uncompressed')return '04'+xh+bytesToHex(bigToBytes32(aff.y));
+  throw new Error('unknown format: '+fmt);
+}
+// Encode the public key of a private key in the requested format.
+function pubkeyInFormat(privHex, fmt){
+  const d=BigInt('0x'+privHex.trim());
+  return encodePointHex(toAffine(jMul(d,G)), fmt);
+}
+// Re-encode an existing public key into another format (same underlying point).
+function convertPubkey(pubHex, fmt){
+  return encodePointHex(toAffine(parsePubkeyHex(pubHex)), fmt);
+}
+// BIP-340-correct npub / nsec for a private key (x is parity-independent;
+// nsec is normalised to the even-y secret so the pair is consistent).
+function npubFromPriv(privHex){return npubEncode(pubkeyInFormat(privHex,'xonly'));}
+function nsecFromPriv(privHex){
+  let d=BigInt('0x'+privHex.trim());
+  if((toAffine(jMul(d,G)).y&1n)===1n)d=modN(N-d);
+  return nsecEncode(bytesToHex(bigToBytes32(d)));
+}
+
+const NostringerJS={
+  generateKeypairHex, sign, verify, keyImageOf, keyImagesMatch,
+  serializeSig, deserializeSig, parsePubkeyHex, bytesToHex,
+  // NIP-19
+  decodeNostrEntity, npubEncode, nsecEncode, noteEncode, bech32Decode, bech32Encode,
+  // BIP-340 + events
+  schnorrSign, schnorrVerify, xonlyPubFromPriv, eventId,
+  buildRingSignedEvent, verifyRingSignedEvent,
+  // format conversion
+  pubkeyInFormat, convertPubkey, npubFromPriv, nsecFromPriv,
+};
+if(typeof module!=='undefined'&&module.exports)module.exports=NostringerJS;
+if(typeof window!=='undefined')window.NostringerJS=NostringerJS;
+
+</script>
+<script>
+/* ================= UI ================= */
+const $=s=>document.querySelector(s);
+const NS=window.NostringerJS;
+let identities=[];   // {id,label,priv,pub,fmt,owned,inRing,signer}
+let extKeys=[];      // {id,label,pub,inRing}  (ring-only, no privkey)
+let counter=0;
+let signFmt='xonly';
+let lastSig=null;
+
+function toast(t){const el=$('#toast');el.textContent=t;el.classList.add('show');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('show'),1400);}
+function copy(text,label){navigator.clipboard.writeText(text).then(()=>toast((label||'copied')+' ✓'));}
+function short(k){return k.length>22?k.slice(0,10)+'…'+k.slice(-8):k;}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function mkbtn(label,fn){const b=document.createElement('button');b.className='iconbtn ghost';b.textContent=label;b.onclick=fn;return b;}
+function pad(n){return String(n).padStart(2,'0');}
+
+function currentRing(){ // ordered: identities in ring, then external in ring
+  const a=identities.filter(i=>i.inRing).map(i=>i.pub);
+  const b=extKeys.filter(e=>e.inRing).map(e=>e.pub);
+  return a.concat(b);
+}
+function signerObj(){return identities.find(i=>i.signer&&i.inRing);}
+// re-encode a member's public key into its currently selected format
+function recomputePub(o,owned){
+  o.pub = owned ? NS.pubkeyInFormat(o.priv,o.fmt) : NS.convertPubkey(o.pubRaw,o.fmt);
+}
+function detectFmt(hex){return hex.length===64?'xonly':hex.length===66?'compressed':'uncompressed';}
+
+function render(){
+  const list=$('#idlist');
+  const all=[...identities,...extKeys];
+  if(all.length===0){list.innerHTML='<div class="empty">No identities yet. Generate a few — each is a keypair you control. Tick the ones to include in the ring, then choose one to sign as.</div>';}
+  else{
+    list.innerHTML='';
+    identities.forEach(i=>list.appendChild(idRow(i,true)));
+    extKeys.forEach(e=>list.appendChild(idRow(e,false)));
+  }
+  // crumbs
+  $('#cr-ids').textContent=identities.length+' identit'+(identities.length===1?'y':'ies');
+  const rs=currentRing().length;
+  const crRing=$('#cr-ring');crRing.textContent='ring: '+rs;crRing.classList.toggle('on',rs>=2);
+  const crSig=$('#cr-sig');crSig.textContent=lastSig?'signature ✓':'no signature';crSig.classList.toggle('on',!!lastSig);
+  // signer + sign button
+  const s=signerObj();
+  $('#signerHint').textContent=s?('signing as '+s.label+' (hidden in ring)'):'select a signer below';
+  $('#signBtn').disabled=!(s && rs>=2);
+}
+
+function idRow(o,owned){
+  const div=document.createElement('div');
+  div.className='idrow'+(owned&&o.signer&&o.inRing?' signer':'');
+  // selector column
+  const sel=document.createElement('div');sel.className='idsel';
+  const ring=document.createElement('label');ring.className='chk';ring.title='include in ring';
+  const cb=document.createElement('input');cb.type='checkbox';cb.checked=o.inRing;
+  cb.onchange=()=>{o.inRing=cb.checked;if(!cb.checked&&o.signer)o.signer=false;render();};
+  ring.appendChild(cb);const rl=document.createElement('span');rl.textContent='ring';ring.appendChild(rl);
+  sel.appendChild(ring);
+  if(owned){
+    const sgn=document.createElement('label');sgn.className='chk';sgn.title='sign as this identity';
+    const rb=document.createElement('input');rb.type='radio';rb.name='signer';rb.checked=!!o.signer;rb.style.borderRadius='50%';
+    rb.onchange=()=>{identities.forEach(x=>x.signer=false);o.signer=true;if(!o.inRing){o.inRing=true;}render();};
+    sgn.appendChild(rb);const sl=document.createElement('span');sl.textContent='sign';sgn.appendChild(sl);
+    sel.appendChild(sgn);
+  }
+  div.appendChild(sel);
+  // meta
+  const meta=document.createElement('div');meta.className='idmeta';
+  const nm=document.createElement('div');nm.className='idname';
+  nm.appendChild(document.createTextNode(o.label));
+  if(!owned){const ex=document.createElement('span');ex.className='exttag';ex.textContent='external';nm.appendChild(ex);}
+  const fsel=document.createElement('select');fsel.className='fmtmini';fsel.title='switch public-key format (same key)';
+  [['xonly','x-only'],['compressed','compressed'],['uncompressed','uncompressed']].forEach(([val,lbl])=>{
+    const op=document.createElement('option');op.value=val;op.textContent=lbl;if(o.fmt===val)op.selected=true;fsel.appendChild(op);
+  });
+  fsel.onchange=()=>{o.fmt=fsel.value;recomputePub(o,owned);render();};
+  nm.appendChild(fsel);
+  const key=document.createElement('div');key.className='idkey';key.title='click to copy public key';
+  key.textContent='pk '+short(o.pub);
+  key.onclick=()=>copy(o.pub,'pubkey');
+  meta.appendChild(nm);meta.appendChild(key);div.appendChild(meta);
+  // actions
+  const act=document.createElement('div');act.className='idactions';
+  if(owned){
+    if(o.fmt==='xonly'){
+      act.appendChild(mkbtn('npub',()=>copy(NS.npubFromPriv(o.priv),'npub')));
+      act.appendChild(mkbtn('nsec',()=>copy(NS.nsecFromPriv(o.priv),'nsec')));
+    }else{
+      act.appendChild(mkbtn('copy sk',()=>copy(o.priv,'private key')));
+    }
+  }
+  const del=document.createElement('button');del.className='iconbtn ghost';del.textContent='✕';del.title='remove';
+  del.onclick=()=>{if(owned)identities=identities.filter(x=>x!==o);else extKeys=extKeys.filter(x=>x!==o);render();};
+  act.appendChild(del);div.appendChild(act);
+  return div;
+}
+
+function nextLabel(){counter++;return 'Member '+String(counter).padStart(2,'0');}
+
+/* generate */
+$('#gen').onclick=()=>{
+  const kp=NS.generateKeypairHex(signFmt);
+  identities.push({label:nextLabel(),priv:kp.private_key_hex,pub:NS.pubkeyInFormat(kp.private_key_hex,signFmt),fmt:signFmt,inRing:true,signer:identities.every(i=>!i.signer)});
+  render();
+};
+$('#fmtsel').onchange=e=>{signFmt=e.target.value;};
+$('#seedDemo').onclick=()=>{
+  identities=[];extKeys=[];counter=0;
+  const fmts=['xonly','compressed','xonly','uncompressed'];
+  fmts.forEach((f,idx)=>{const kp=NS.generateKeypairHex(f);identities.push({label:nextLabel(),priv:kp.private_key_hex,pub:NS.pubkeyInFormat(kp.private_key_hex,f),fmt:f,inRing:true,signer:idx===1});});
+  render();toast('demo ring seeded');
+};
+$('#importBtn').onclick=()=>{
+  const v=$('#importKey').value.trim();
+  if(!v)return;
+  try{
+    if(v.toLowerCase().startsWith('nsec')){
+      const d=NS.decodeNostrEntity(v);
+      counter++;identities.push({label:'Imported '+pad(counter),priv:d.hex,pub:NS.pubkeyInFormat(d.hex,'xonly'),fmt:'xonly',inRing:true,signer:identities.every(i=>!i.signer)});
+      toast('nsec imported — can sign');
+    }else if(v.toLowerCase().startsWith('npub')||v.toLowerCase().startsWith('nprofile')){
+      const d=NS.decodeNostrEntity(v);
+      counter++;extKeys.push({label:'External '+pad(counter),pubRaw:d.hex,pub:d.hex,fmt:detectFmt(d.hex),inRing:true});
+      toast('npub added to ring');
+    }else{
+      const hex=v.toLowerCase();NS.parsePubkeyHex(hex); // validate
+      counter++;extKeys.push({label:'External '+pad(counter),pubRaw:hex,pub:hex,fmt:detectFmt(hex),inRing:true});
+      toast('pubkey added to ring');
+    }
+    $('#importKey').value='';render();
+  }catch(e){toast('import failed: '+e.message);}
+};
+
+/* sign */
+$('#signBtn').onclick=()=>{
+  const s=signerObj();const ring=currentRing();const msg=$('#msg').value;
+  try{
+    const sig=NS.sign(msg,s.priv,ring,'SAG');
+    lastSig={sig,ringSize:ring.length,msg,ring:ring.slice()};
+    renderSignOut();render();
+    $('#loadLast').disabled=false;
+  }catch(e){
+    $('#signOut').innerHTML='<div class="verdict v-invalid"><span class="vbadge">error</span><span class="vtext">'+e.message+'</span></div>';
+  }
+};
+function renderSignOut(){
+  $('#signOut').innerHTML=
+    '<div class="out"><div class="outlabel">Signature <button class="iconbtn ghost" id="copySig">copy</button></div>'+
+    '<div class="sigtext">'+lastSig.sig+'</div>'+
+    '<div class="meta"><span>ring size <b>'+lastSig.ringSize+'</b></span><span>signer <b>concealed</b></span><span>bytes <b>'+((lastSig.sig.length-5)/2)+'</b></span></div>'+
+    '</div>'+
+    '<p class="note">A verifier learns only that <b style="color:var(--ink)">one of the '+lastSig.ringSize+'</b> ring members signed — never which one. The signature is fully unlinkable.</p>';
+  $('#copySig').onclick=()=>copy(lastSig.sig,'signature');
+}
+
+/* verify */
+$('#loadLast').onclick=()=>{if(lastSig){$('#vsig').value=lastSig.sig;$('#vmsg').value=lastSig.msg;$('#vring').value=lastSig.ring.join('\n');toast('loaded');}};
+$('#loadRing').onclick=()=>{const r=currentRing();if(r.length){$('#vring').value=r.join('\n');toast('ring loaded');}else toast('ring is empty');};
+$('#verifyBtn').onclick=()=>{
+  const sig=$('#vsig').value.trim();
+  const msg=$('#vmsg').value;
+  const ring=$('#vring').value.split('\n').map(x=>x.trim()).filter(Boolean);
+  const out=$('#verifyOut');
+  if(!sig){out.innerHTML=verdict('idle','—','Paste a signature to verify.');return;}
+  if(ring.length<2){out.innerHTML=verdict('invalid','INVALID','The ring needs at least two public keys.');return;}
+  try{
+    const ok=NS.verify(sig,msg,ring);
+    if(ok)out.innerHTML=verdict('valid','VALID','The signature was produced by <b>one of the '+ring.length+'</b> public keys in this ring, for this exact message. The signer\'s identity stays hidden.');
+    else out.innerHTML=verdict('invalid','INVALID','Rejected. The message, the ring, or its <b>order</b> doesn\'t match what was signed — or the signature is forged.');
+  }catch(e){out.innerHTML=verdict('invalid','ERROR',e.message);}
+};
+function verdict(kind,badge,text){
+  return '<div class="verdict v-'+kind+'"><span class="vbadge">'+badge+'</span><span class="vtext">'+text+'</span></div>';
+}
+
+render();
+</script>
+<script>
+function toggleTheme(){var h=document.documentElement,t=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',t);try{localStorage.setItem('os-theme',t);}catch(e){}}
+</script>
+</body>
+</html>
