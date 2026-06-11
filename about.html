@@ -31,7 +31,7 @@
     <h1>A short introduction to ring signatures</h1>
     <p class="standfirst">How to prove a message came from inside a group, without revealing which member wrote it.</p>
 
-    <p>Most of the time, a signature is meant to tell you exactly who is speaking. You sign a message with your private key, and anyone who holds the matching public key can confirm that the message came from you and from no one else. That certainty is the entire point of an ordinary signature, but sometimes it's not quite what you want.</p>
+    <p>Most of the time, a digital signature is meant to tell you exactly who is speaking. You sign a message with your private key, and anyone who holds the matching public key can confirm that the message came from you and from no one else. That certainty is the entire point of an ordinary signature, but sometimes it's not quite what you want.</p>
 
     <p>There are situations where you want to prove that a message came from <em>someone</em> within a particular group, while making it impossible to tell <em>which</em> member it was. A ring signature does exactly that. It lets you sign on behalf of a set of public keys — your own and any number of others — so that a verifier can confirm the signature was produced by one of those keys, and learns nothing more than that.</p>
 
