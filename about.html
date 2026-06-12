@@ -19,6 +19,7 @@
       <a class="lnk" href="index.html">Home</a>
       <a class="lnk on" href="about.html">About</a>
       <a class="lnk" href="console.html">Console</a>
+      <a class="lnk" href="faq.html">FAQ</a>
       <a class="lnk" href="reading.html">Further reading</a>
       <button id="themeBtn" class="themetoggle" onclick="toggleTheme()" aria-label="Switch theme">
         <svg class="ic-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3 6.6 6.6 0 0 0 21 12.8z"/></svg>
@@ -37,14 +38,11 @@
 
     <p>(If public and private keys are unfamiliar, <a href="https://www.youtube.com/watch?v=GSIDS_lvRv4" target="_blank" rel="noopener">a short refresher</a> will make the rest of this page easier to follow.)</p>
 
-
     <p>Ring signatures were introduced in a 2001 paper by Rivest, Shamir, and Tauman, with the fitting title <em>How to Leak a Secret</em>. Their motivating example is a government insider who wants to pass a credible tip to a journalist. Sign it under your own name and the message carries real weight, but you have exposed yourself to retaliation. Send it anonymously and you are safe, but the journalist has little reason to believe you were ever in a position to know.</p>
 
     <p>A ring signature can soften that tradeoff. The insider signs the message using their own key together with the public keys of several colleagues. The journalist can then verify that the message came from someone inside that circle — so the claim carries the standing of the group — and yet no one, the journalist included, can prove who actually wrote it. Put in one sentence: a ring signature lets you trade, person by person, between your anonymity and your credibility, instead of being forced to sacrifice all of one to keep the other.</p>
 
-
     <p>A feature that often slips past even careful readers is that a ring requires no cooperation. You do not ask anyone's permission to include them. You simply collect their public keys and assemble the ring yourself. Only your own contribution to the signature is genuine; every other member's is, in effect, produced on their behalf by the mathematics. The other people named in your ring never agreed to be there, and may never even know they were. This feature is what makes ring signatures powerful for the person who needs cover. On the other hand, it means that the only sure way never to be named in someone's ring is never to publish a public key at all.</p>
-
 
     <p>For a long time the idea stayed mostly theoretical, for a mundane reason: hardly anyone manages their own cryptographic keys anymore. We have handed our identities to services like Gmail, which is why a forgotten password is a minor nuisance rather than a disaster — and which also means there is no public key of ours lying around for anyone to build a ring from. <a href="https://nostr.com/" target="_blank" rel="noopener">Nostr</a> changes that. It is an open protocol whose users generate and hold their own keypairs, which means there is already a large and growing set of real, identity-linked public keys ready for forging into a ring signature.</p>
 
@@ -65,7 +63,7 @@
     <p>This is experimental, unaudited software meant for learning and exploration rather than
     real-world use, and all of its cryptography runs locally in your browser so that no keys
     ever leave the page.</p>
-    <p class="fnav"><a href="index.html">Home</a> · <a href="console.html">Console</a> · <a href="reading.html">Further reading</a></p>
+    <p class="fnav"><a href="index.html">Home</a> · <a href="console.html">Console</a> · <a href="faq.html">FAQ</a> · <a href="reading.html">Further reading</a></p>
   </footer>
 
 </div>
