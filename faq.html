@@ -33,16 +33,16 @@
     <p class="standfirst">The questions people tend to ask first about ring signatures and about this tool. This is a draft to edit or replace.</p>
 
     <h2>Can the person checking a signature tell who actually signed it?</h2>
-    <p><b>No</b> — that is the whole point. A valid signature proves the message was signed by one of the keys in the ring and nothing narrows it down further; as far as the mathematics is concerned, every member is equally likely to have been the signer. The more keys in the ring, the larger the crowd you are hidden in.</p>
+    <p><b>No</b> — that is the whole point. A valid signature proves the message was signed by one of the keys in the ring and the only way to narrow it down further is to make inferences based on the content of the message; as far as the mathematics is concerned, every member is equally likely to have been the signer. The more keys in the ring, the larger the crowd you are hidden in.</p>
 
     <h2>Do I need permission from the other people in the ring?</h2>
-    <p><b>No</b>, and this is the part that surprises people. You build a ring out of public keys, which are public by definition. Only your own contribution to the signature is real; the parts attributed to the other members are produced on their behalf by the signing process. They never agree to it, and may never know they were named.</p>
+    <p><b>No</b>, and this is the part that people misunderstand most often. You build a ring out of public keys, which are public by definition. Only your own contribution to the signature is real, no one else has to agree to it, and may never know they were named.</p>
 
     <h2>So anyone can be placed in a ring without consenting?</h2>
-    <p>Yes — that is the flip side of the previous answer. The only way to be certain you are never named in someone's ring is never to publish a public key, which on a network like Nostr would mean not taking part at all.</p>
+    <p>Yes. The only way to be certain you are never named in someone's ring is never to publish a public key, which on a network like Nostr would mean not taking part at all.</p>
 
     <h2>Can someone tell that two different signatures came from the same signer?</h2>
-    <p>Not with the scheme this tool uses. It produces SAG (spontaneous anonymous group) signatures, which are <em>unlinkable</em>: two signatures from the same person look no more related than two from different people. Some other systems — Monero's, for instance — deliberately add linkability so a key cannot sign twice unnoticed, which is a useful trade-off for preventing double-spends but not what is wanted here.</p>
+    <p>The only way to do this with OstrichSign is to post from a dedicated pseudonym (which you should do in any case), and for the body of the messages to endorse that pseudonym or include a normal signature from it.</p>
 
     <h2>How is this different from a "group signature"?</h2>
     <p>A group signature has a manager who sets the group up in advance and who can, if it comes to it, unmask the signer. A ring signature has no manager, no setup, and no one who can ever reveal who signed. You assemble the ring yourself, on the spot, from whatever public keys you choose.</p>
@@ -51,10 +51,10 @@
     <p><b>No.</b> Generating keys, signing, and verifying all happen locally in your browser. No key, message, or signature is transmitted anywhere by this page. If you want to confirm it, turn off your network connection and watch everything keep working.</p>
 
     <h2>Is it safe to rely on for something that actually matters?</h2>
-    <p>Please not yet. This is experimental software that has not had a formal security audit, and it is meant for learning and exploration. Treat anything it produces as a demonstration rather than a guarantee.</p>
+    <p>No. This is experimental software that has not yet had a formal security audit, and it is meant for learning, testing, and exploration. Treat anything it produces as a demonstration rather than a guarantee.</p>
 
     <h2>If I post a signature on Nostr, am I really anonymous?</h2>
-    <p>The signature itself hides which member signed, but the act of posting can expose you in other ways. Relays can see the address and timing of whoever uploads or reads a note, so anyone who needs genuine cover should connect through Tor or a VPN and think carefully about which relays they trust. Deleting a note afterward is only a request to those relays, never a guarantee that it is gone.</p>
+    <p>The signature itself hides which member signed, but the act of posting can expose you in other ways. Make sure to create a separate dedicated pseudonym from which to post the message. Relays can see the address and timing of whoever uploads or reads a note, so anyone who needs genuine cover should connect through Tor or a VPN and think carefully about which relays they trust. Deleting a note afterward is only a request to those relays, never a guarantee that it is gone.</p>
 
     <h2>What are npub, nsec, and the hex keys?</h2>
     <p>They are different ways of writing the same keys. An <code>npub</code> is a public key in Nostr's bech32 format, an <code>nsec</code> is a private key in that format, and "hex" is the raw hexadecimal. The tool can also show public keys in x-only (Nostr style), compressed (Bitcoin style), or uncompressed form — all three describe the same underlying key, just written differently. Importing an <code>nsec</code> adds you to the ring as a possible signer; importing an <code>npub</code> only widens the ring.</p>
