@@ -9,6 +9,15 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="site.css">
+<style>
+  .hero-diagram{margin:36px 0 2px;max-width:540px}
+  .hero-diagram svg{width:100%;height:auto;display:block}
+  .hero-diagram figcaption{font-family:var(--mono);font-size:12.5px;line-height:1.65;
+    color:var(--faint);margin:16px 2px 0;max-width:48ch}
+  .herolinks{display:flex;gap:24px;flex-wrap:wrap;margin-top:30px;font-size:16px}
+  .herolinks a{color:var(--accent);text-decoration:none}
+  .herolinks a:hover{color:var(--accent-hover);text-decoration:underline;text-underline-offset:3px}
+</style>
 </head>
 <body>
 <div class="wrap">
@@ -33,14 +42,56 @@
   <header class="hero">
     <p class="meta-line">secp256k1 · SAG ring signatures over Nostr keys</p>
     <h1>Ostrich<span class="ring">Sign</span></h1>
-    <!-- PASTE YOUR PITCH HERE. Placeholder renders the layout; replace the text. -->
     <p class="lede">
       Forge others' signatures alongside your own and let any reader prove that exactly one of the signatures is
       authentic, but not which one.
     </p>
-    <div class="btnrow">
-      <a class="btn" href="about.html">Read the introduction &rarr;</a>
-      <a class="btn" href="console.html">Open the console &rarr;</a>
+    <figure class="hero-diagram">
+      <svg id="osd" class="ringdiag" viewBox="0 0 600 348" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A ring signature joins several public keys into one closed loop; the real signer is one of them, hidden among the rest.">
+      <style>
+        #osd text{font-family:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace}
+        #osd .guide{fill:none;stroke:var(--rule);stroke-width:1}
+        #osd .chain{fill:none;stroke:var(--accent);stroke-width:1.7;stroke-linecap:round}
+        #osd .node-ring{fill:var(--bg);stroke:var(--faint);stroke-width:1.4}
+        #osd .node-dot{fill:var(--muted)}
+        #osd .signer-ring{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.7}
+        #osd .signer-dot{fill:var(--accent)}
+        #osd .eyebrow{fill:var(--faint);font-size:11px;letter-spacing:.18em}
+        #osd .accent{fill:var(--accent);font-size:11.5px;letter-spacing:.03em}
+        #osd .dim{fill:var(--muted);font-size:11px}
+        #osd .sig{fill:var(--accent);font-size:13px;letter-spacing:.07em}
+        #osd .leader{stroke:var(--faint);stroke-width:1;fill:none}
+        #osd .msg-pill{fill:none;stroke:var(--rule);stroke-width:1.3}
+        #osd .msg-line{stroke:var(--faint);stroke-width:1;stroke-dasharray:2 4;fill:none}
+      </style>
+      <defs><marker id="osd-arr" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M0.5,0.8 L9,5 L0.5,9.2" fill="none" stroke="var(--accent)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker><marker id="osd-arrf" viewBox="0 0 10 10" refX="7.5" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse" markerUnits="userSpaceOnUse"><path d="M1,1.2 L8.5,5 L1,8.8" fill="none" stroke="var(--faint)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+      <circle class="guide" cx="300" cy="162" r="104"/>
+      <rect class="msg-pill" x="40" y="150" width="74" height="24" rx="12"/>
+      <text class="dim" x="77" y="166" text-anchor="middle">message</text>
+      <path class="msg-line" d="M118,162 L189,162" marker-end="url(#osd-arrf)"/>
+      <path class="chain" d="M319.8,59.9 A104,104 0 0 1 378.5,93.8" marker-end="url(#osd-arr)"/>
+      <path class="chain" d="M398.3,128.1 A104,104 0 0 1 398.3,195.9" marker-end="url(#osd-arr)"/>
+      <path class="chain" d="M378.5,230.2 A104,104 0 0 1 319.8,264.1" marker-end="url(#osd-arr)"/>
+      <path class="chain" d="M280.2,264.1 A104,104 0 0 1 221.5,230.2" marker-end="url(#osd-arr)"/>
+      <path class="chain" d="M201.7,195.9 A104,104 0 0 1 201.7,128.1" marker-end="url(#osd-arr)"/>
+      <path class="chain" d="M221.5,93.8 A104,104 0 0 1 280.2,59.9" marker-end="url(#osd-arr)"/>
+      <circle class="node-ring" cx="300.0" cy="58.0" r="15"/><circle class="node-dot" cx="300.0" cy="58.0" r="3.8"/>
+      <circle class="signer-ring" cx="390.1" cy="110.0" r="15"/><circle class="signer-dot" cx="390.1" cy="110.0" r="4.4"/>
+      <circle class="node-ring" cx="390.1" cy="214.0" r="15"/><circle class="node-dot" cx="390.1" cy="214.0" r="3.8"/>
+      <circle class="node-ring" cx="300.0" cy="266.0" r="15"/><circle class="node-dot" cx="300.0" cy="266.0" r="3.8"/>
+      <circle class="node-ring" cx="209.9" cy="214.0" r="15"/><circle class="node-dot" cx="209.9" cy="214.0" r="3.8"/>
+      <circle class="node-ring" cx="209.9" cy="110.0" r="15"/><circle class="node-dot" cx="209.9" cy="110.0" r="3.8"/>
+      <path class="leader" d="M400.7,99.4 L440,72 L462,72"/>
+      <text class="accent" x="468" y="69">real signer</text>
+      <text class="dim" x="468" y="84">hidden in the ring</text>
+      <text class="eyebrow" x="40" y="30">ring of public keys</text>
+      <text class="sig" x="300" y="312" text-anchor="middle">σ = ( c₀ , s₁ … s₆ )</text>
+      </svg>
+      <figcaption>One signature, one closed loop &mdash; provably from a member of the ring, never which one.</figcaption>
+    </figure>
+    <div class="herolinks">
+      <a href="about.html">Read the introduction &rarr;</a>
+      <a href="console.html">Open the console &rarr;</a>
     </div>
   </header>
 
