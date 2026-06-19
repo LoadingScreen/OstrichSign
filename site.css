@@ -1,34 +1,34 @@
 /* ============================================================
    OstrichSign — shared site styling
-   Quiet, traditional, readable. Warm serif on warm paper, hairline
-   rules instead of boxes, a muted gold accent that holds up in both
-   light and dark. The console (console.html) keeps its own look and
-   does not use this file.
+   Quiet, traditional, readable. Serif on cool neutral paper, hairline
+   rules instead of boxes, a calm slate-blue accent that holds up in
+   both light and dark. The console (console.html) keeps its own look
+   and does not use this file.
    ============================================================ */
 
 :root{
-  --bg:#f6f3ea;
-  --surface:#efeadd;
-  --ink:#2c2a24;
-  --muted:#6c685e;
-  --faint:#9b9586;
-  --rule:#e2dccd;
-  --accent:#9a6b18;
-  --accent-hover:#7d560f;
-  --accent-soft:rgba(154,107,24,.10);
+  --bg:#f1f3f6;
+  --surface:#e7eaef;
+  --ink:#23262d;
+  --muted:#5b626d;
+  --faint:#8b909b;
+  --rule:#dde0e7;
+  --accent:#3f5d8f;
+  --accent-hover:#33507a;
+  --accent-soft:rgba(63,93,143,.10);
   --serif:'Spectral',Georgia,'Times New Roman',serif;
   --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
 }
 html[data-theme="dark"]{
-  --bg:#16140e;
-  --surface:#1e1b14;
-  --ink:#e8e3d6;
-  --muted:#a39d8d;
-  --faint:#736d5d;
-  --rule:#2b2820;
-  --accent:#d8a948;
-  --accent-hover:#e6bd66;
-  --accent-soft:rgba(216,169,72,.12);
+  --bg:#11141a;
+  --surface:#191d25;
+  --ink:#e4e7ee;
+  --muted:#9aa1ad;
+  --faint:#646b78;
+  --rule:#262b34;
+  --accent:#8aa6d8;
+  --accent-hover:#a6bee4;
+  --accent-soft:rgba(138,166,216,.13);
 }
 
 *{box-sizing:border-box}
@@ -100,7 +100,7 @@ html[data-theme="dark"] .themetoggle .ic-moon{display:none}
   width:5px;height:5px;border-radius:50%;background:var(--accent)}
 .prose blockquote{margin:22px 0;padding:2px 0 2px 22px;border-left:2px solid var(--rule);
   color:var(--muted);font-style:italic}
-.prose code{font-family:var(--mono);font-size:13.5px;color:var(--accent);
+.prose code{font-family:var(--mono);font-size:13.5px;color:var(--ink);
   background:var(--surface);border-radius:3px;padding:1px 5px}
 .prose hr{border:0;border-top:1px solid var(--rule);margin:34px 0}
 
