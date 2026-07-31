@@ -18,6 +18,7 @@
     <div class="links">
       <a class="lnk" href="index.html">Home</a>
       <a class="lnk on" href="about.html">About</a>
+      <a class="lnk" href="examples.html">Examples</a>
       <a class="lnk" href="console.html">Console</a>
       <a class="lnk" href="faq.html">FAQ</a>
       <a class="lnk" href="reading.html">Further reading</a>
@@ -30,8 +31,8 @@
 
   <article class="prose">
     <h1>A short introduction to ring signatures</h1>
-    <p class="standfirst">How to prove a message came from inside a group, without revealing which member wrote it.</p>
-
+    <!-- <p class="standfirst">How to prove a message came from inside a group, without revealing which member wrote it.</p> -->
+<br>
     <p>Most of the time, a digital signature is meant to tell you exactly who is speaking. You sign a message with your private key, and anyone who holds the matching public key can confirm that the message came from you and from no one else. That certainty is the entire point of an ordinary signature, but sometimes it's not quite what you want.</p>
 
     <p>(If public and private keys are unfamiliar, <a href="https://www.youtube.com/watch?v=GSIDS_lvRv4" target="_blank" rel="noopener">this short video</a> will make the rest of this page easier to follow.)</p>
@@ -40,9 +41,9 @@
 
     <p>Ring signatures were introduced in a 2001 paper by Rivest, Shamir, and Tauman, under the title How to Leak a Secret. Their motivating example is a government insider who wants to pass a credible tip to a journalist. If the insider digitally signs it with his real name then the journalist will find it credible, but the insider is now exposed to retaliation. If the tip is given anonymously then the source is safe, but the journalist has little reason to think it is genuine.</p>
 
-    <p>A ring signature can bridge that gap. The insider signs the message using their own key together with the public keys of several colleagues. The journalist can then verify that the message came from someone inside that circle — so the claim carries the credibility of the group — and yet no one, the journalist included, can prove who actually wrote it. In a sentence: a ring signature lets you trade, person by person, between your anonymity and your credibility, instead of being forced to sacrifice all of one to keep the other.</p>
+    <p>A ring signature can bridge that gap. The insider signs the message using their own key together with the public keys of several colleagues. The journalist can then verify that the message came from someone inside that circle — so the claim carries the credibility of the group — and yet no one, the journalist included, can prove who actually wrote it. In a sentence: a ring signature lets you trade incrementally between your anonymity and your credibility, instead of being forced to sacrifice all of one to keep the other.</p>
 
-    <p>The crucial feature is that assembling a ring requires no cooperation. You do not ask anyone's permission to include them, you simply collect their public keys and assemble the ring yourself. Only your own contribution to the signature is genuine, while every other member's is, in effect, forged. The other people named in your ring never agreed to be included, and may never even find out that they were. This feature is what makes ring signatures powerful for the person who needs cover. On the other hand, it means that the only sure way never to be named in someone's ring signature is to never share a public key at all.</p>
+    <p>The crucial feature is that assembling a ring requires no cooperation. You do not ask anyone's permission to include them, you simply collect their public keys and assemble the ring yourself. Only your own contribution to the signature is genuine, while every other member's is, in effect, forged. <b>The other people named in your ring never agreed to be included, and may never even find out that they were.</b> This feature is what makes ring signatures powerful for the person who needs cover. On the other hand, it means that the only sure way never to be named in someone's ring signature is to never share a public key at all.</p>
 
     <p>The modern internet has come to rely on centralized custodians of identity like Google, Apple, and Meta. That is why a forgotten password is a minor nuisance rather than a disaster, but it's also why few people have ever even heard of the benefits of public key cryptography. That has started to change now that <a href="https://nostr.com/" target="_blank" rel="noopener">Nostr</a> has been around for a few years. It is an open protocol whose users generate and hold their own key pairs, which means there is already a large and growing set of real identities ready for forging into a ring signature.</p>
 
@@ -63,7 +64,7 @@
     <p>This is experimental, unaudited software meant for learning and exploration rather than
     real-world use. All of its cryptography runs locally in your browser so that no keys
     ever leave the page.</p>
-    <p class="fnav"><a href="index.html">Home</a> · <a href="console.html">Console</a> · <a href="faq.html">FAQ</a> · <a href="reading.html">Further reading</a></p>
+    <p class="fnav"><a href="index.html">Home</a> · <a href="examples.html">Examples</a> · <a href="console.html">Console</a> · <a href="faq.html">FAQ</a> · <a href="reading.html">Further reading</a></p>
   </footer>
 
 </div>

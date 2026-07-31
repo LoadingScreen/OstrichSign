@@ -154,6 +154,7 @@ footer code{font-family:var(--mono);color:var(--accent);font-size:12.5px}
     <div class="links">
       <a class="lnk" href="index.html">Home</a>
       <a class="lnk" href="about.html">About</a>
+      <a class="lnk" href="examples.html">Examples</a>
       <a class="lnk on" href="console.html">Console</a>
       <a class="lnk" href="faq.html">FAQ</a>
       <a class="lnk" href="reading.html">Further reading</a>
@@ -182,7 +183,7 @@ footer code{font-family:var(--mono);color:var(--accent);font-size:12.5px}
   <section class="panel">
     <div class="phead"><span class="pnum">01</span><span class="ptitle">Identities &amp; Ring</span><span class="phint">Order matters — the ring is verified in this exact sequence.</span></div>
     <div class="pbody">
-      <p class="fld" style="margin:2px 0 16px;max-width:60ch">Import keys you already have, or generate fresh ones from this page.</p>
+      <p class="fld" style="margin:2px 0 16px;max-width:60ch">Build your ring <b>any one way</b> — import keys you already have, or generate fresh ones. You don't need to do both.</p>
 
       <label class="fld" for="importKey">Import existing keys</label>
       <div class="row">
@@ -231,7 +232,7 @@ footer code{font-family:var(--mono);color:var(--accent);font-size:12.5px}
       <div class="row" style="margin:6px 0 12px"><button class="ghost iconbtn" id="loadLast" disabled>↑ load last signature</button></div>
       <label class="fld" for="vmsg">Message</label>
       <textarea id="vmsg">This is a secret message to the group.</textarea>
-      <label class="fld" for="vring" style="margin-top:12px">Ring — one public key per line, <b>exact same order</b></label>
+      <label class="fld" for="vring" style="margin-top:12px">Ring — one public key per line, <b style="color:var(--accent)">exact same order</b></label>
       <textarea id="vring" style="min-height:90px" placeholder="public keys, one per line"></textarea>
       <div class="row" style="margin:6px 0 0"><button class="ghost iconbtn" id="loadRing">↑ load current ring</button>
       <button class="primary" id="verifyBtn">✓ Verify</button></div>

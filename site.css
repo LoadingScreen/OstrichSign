@@ -16,6 +16,7 @@
   --accent:#3f5d8f;
   --accent-hover:#33507a;
   --accent-soft:rgba(63,93,143,.10);
+  --accent2:#2c7a72;
   --serif:'Spectral',Georgia,'Times New Roman',serif;
   --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
 }
@@ -29,6 +30,7 @@ html[data-theme="dark"]{
   --accent:#8aa6d8;
   --accent-hover:#a6bee4;
   --accent-soft:rgba(138,166,216,.13);
+  --accent2:#6fbdb2;
 }
 
 *{box-sizing:border-box}
@@ -145,3 +147,38 @@ footer .fnav a:hover{color:var(--accent)}
   .hero{padding-top:34px}
   .btn{flex:1;text-align:center}
 }
+
+/* ---- signed-message cards (homepage hero + examples page) ---- */
+.signed{border:1px solid var(--rule);border-radius:6px;background:var(--surface);max-width:560px;margin:36px 0 2px}
+.signed-msg{font-size:18px;line-height:1.52;color:var(--ink);margin:0;padding:18px 20px 18px;font-style:italic;white-space:pre-line}
+.signed-sec{border-top:1px solid var(--rule);padding:14px 20px}
+.signed-k{font-family:var(--mono);font-size:11px;letter-spacing:.07em;color:var(--faint);text-transform:uppercase}
+.signed-keys{list-style:none;margin:11px 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:14px 22px}
+.idrow{min-width:0}
+.idmeta{display:flex;flex-direction:column;gap:2px;min-width:0}
+.idname{font-family:var(--serif);font-size:14px;color:var(--ink);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.idtitle{color:var(--faint);font-size:13px;line-height:1.3;margin-top:1px}
+.idnpub{font-family:var(--mono);font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.idnpub .np-pfx{color:var(--accent2)}
+.signed-sig{font-family:var(--mono);font-size:12.5px;color:var(--muted);margin-top:9px;word-break:break-all;line-height:1.5}
+.signed-sig .pfx{color:var(--accent2)}
+.sxdots{display:flex;gap:8px;margin:14px 2px 0;flex-wrap:wrap}
+.sxdot{width:7px;height:7px;border-radius:50%;border:0;padding:0;cursor:pointer;background:var(--rule);transition:background .2s,transform .2s}
+.sxdot[aria-selected="true"]{background:var(--accent);transform:scale(1.15)}
+.signed-cap{font-family:var(--mono);font-size:12px;line-height:1.6;color:var(--faint);margin:15px 2px 0;max-width:54ch}
+.herolinks{display:flex;gap:24px;flex-wrap:wrap;margin-top:30px;font-size:16px}
+.herolinks a{color:var(--accent);text-decoration:none}
+.herolinks a:hover{color:var(--accent-hover);text-decoration:underline;text-underline-offset:3px}
+.exitem{margin:44px 0 58px}
+.exitem .signed{margin:20px 0 10px}
+.ex-about{max-width:58ch;margin:0 0 0 24px}
+.ex-about p{margin:0 0 6px;font-size:13px;line-height:1.55;color:var(--faint)}
+@media (max-width:520px){.signed-keys{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:no-preference){.sx-anim{animation:sxfade .34s ease}}
+@keyframes sxfade{from{opacity:.4}to{opacity:1}}
+.hero-cta{margin:20px 0 0}
+.cta{display:inline-block;padding:9px 16px;border:1px solid var(--accent);border-radius:6px;color:var(--accent);font-family:var(--mono);font-size:14px;text-decoration:none;transition:background .15s,color .15s}
+.cta:hover{background:var(--accent);color:var(--bg)}
+.prose .signed-keys{padding-left:0}
+.prose .signed-keys li{margin:0;padding-left:0}
+.prose .signed-keys li:before{content:none;display:none}
