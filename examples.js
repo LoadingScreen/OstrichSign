@@ -94,7 +94,7 @@ window.OS_EXAMPLES = [
     ] },
 
   { title: "Objection to an invitation",
-    msg: "To the festival board, from an anonymous committee member: There are public allegations against the headliner but the booking was summarily approved anyway. For the sake of accountability, we really ought to record a secret ballot vote before the lineup goes public. If his slot survives the vote, so be it. But it shouldn't survive on the assumption that nobody minded.",
+    msg: "To the festival board, from an anonymous committee member: There are public allegations against the headliner but the booking was summarily approved anyway. For the sake of accountability, we really ought to hold a secret ballot vote before the lineup goes public. If his slot survives the vote, so be it. But it shouldn't survive on the assumption that nobody minded.",
     about: "Committee dissent over a controversial booking.",
     members: [
       { name: "Meredith Osborne"},
@@ -109,7 +109,7 @@ window.OS_EXAMPLES = [
 
   { title: "Safety commitments dropped",
     msg: "Our safety policy doesn't reflect what's happening inside. The eval commitments we published were skipped for the last two versions in order to meet the launch schedule. I'm one of the following people on the alignment team.",
-    about: "An AI-safety whistleblower to an external auditor.",
+    about: "An AI alignment whistleblower to an external auditor.",
     members: [
       { name: "Daniel Okonkwo", title: "Research Lead"},
       { name: "Anika Iyer" },
