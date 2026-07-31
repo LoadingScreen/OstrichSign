@@ -27,7 +27,7 @@ window.OS_EXAMPLES = [
 
 
   { title: "Open-letter signatory",
-    msg: "I'm one of the people who helped draft today's open letter. I stand by every word, but signing it openly would cost me my job.",
+    msg: "I'm one of the people who helped draft today's open letter. I stand by every word, but signing it openly would of course cost me my job.",
     about: "A letter signatory proving membership without going public.",
     members: [
       { name: "Prof. Margaret Ellison"},
