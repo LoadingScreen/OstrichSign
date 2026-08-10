@@ -63,7 +63,7 @@ window.OS_EXAMPLES = [
     ] },
 
   { title: "Controversial reading recommendation",
-    msg: "Saw your post. If you're really looking for new perspectives, I think you should check out Francis Q. Walton's top-rated posts. Some people say he's pure evil and no decent person would his blog. I think he's got some useful things to say. You can judge for yourself.",
+    msg: "Saw your post. If you're really looking for new perspectives, I think you should check out Francis Q. Walton's top-rated posts. Some people say he's pure evil and that no decent person would ever read his blog. I think he's got some useful things to say. You can judge for yourself.",
     about: "Responding to a request for reading recommendations with a controversial suggestion.",
     members: [
       { name: "Joey Dillon", },
