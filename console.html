@@ -5,9 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>OstrichSign · Ring Signature Console</title>
 <script>(function(){var t;try{t=localStorage.getItem('os-theme');}catch(e){}if(!t){t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',t);})();</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#f1f3f6; --panel:#f9fafc; --panel2:#e7eaef; --line:#dde0e7;
@@ -15,9 +12,9 @@
   --accent:#3f5d8f; --accent-soft:rgba(63,93,143,.10); --accent-line:rgba(63,93,143,.30);
   --green:#357a4a; --green-soft:rgba(53,122,74,.12);
   --red:#b23a4b; --red-soft:rgba(178,58,75,.10);
-  --serif:'Spectral',Georgia,'Times New Roman',serif;
-  --display:'Spectral',Georgia,serif;
-  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+  --serif:Georgia,'Times New Roman',Times,serif;
+  --display:Georgia,'Times New Roman',Times,serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace;
   --input-bg:#ffffff;
 }
 html[data-theme="dark"]{
@@ -37,7 +34,7 @@ body{min-height:100vh}
 /* site nav */
 .sitenav{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap;padding:24px 0 18px;margin-bottom:8px;border-bottom:1px solid var(--line)}
 .sitenav .wm{font-size:20px;font-weight:600;letter-spacing:.01em;color:var(--ink);text-decoration:none}
-.sitenav .wm .ring{color:var(--accent)}
+.sitenav .wm .ring{color:inherit}
 .sitenav .links{margin-left:auto;display:flex;align-items:baseline;gap:18px;flex-wrap:wrap}
 .sitenav a.lnk{font-size:15px;color:var(--dim);text-decoration:none}
 .sitenav a.lnk:hover{color:var(--ink)}
@@ -53,7 +50,7 @@ header{border:0;background:transparent}
 .hd{padding:30px 0 6px}
 .brandrow{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
 h1{font-family:var(--display);font-weight:600;letter-spacing:-.01em;font-size:clamp(30px,6vw,48px);margin:0;color:var(--ink)}
-h1 .ring{color:var(--accent)}
+h1 .ring{color:inherit}
 .tag{font-family:var(--mono);font-size:11.5px;color:var(--dimmer);letter-spacing:.02em}
 .sub{color:var(--dim);margin:16px 0 0;max-width:60ch;font-size:16px;line-height:1.62}
 .sub b{color:var(--ink);font-weight:600}
@@ -86,7 +83,7 @@ button{
 button:hover{border-color:var(--accent-line);color:var(--accent);background:var(--accent-soft)}
 button.primary{background:var(--accent-soft);color:var(--accent);border-color:var(--accent-line);font-weight:600}
 button.primary:hover{background:var(--accent);color:var(--bg);border-color:var(--accent)}
-button.ghost{background:transparent;color:var(--dim)}
+button.ghost{background:var(--panel2);color:var(--dim);border-color:var(--line)}
 button.ghost:hover{color:var(--accent)}
 button:disabled{opacity:.45;cursor:not-allowed}
 button:disabled:hover{border-color:var(--line);color:var(--ink);background:transparent}
@@ -181,7 +178,7 @@ footer code{font-family:var(--mono);color:var(--accent);font-size:12.5px}
 
   <!-- 01 IDENTITIES -->
   <section class="panel">
-    <div class="phead"><span class="pnum">01</span><span class="ptitle">Identities &amp; Ring</span><span class="phint">Order matters — the ring is verified in this exact sequence.</span></div>
+    <div class="phead"><span class="pnum">01</span><span class="ptitle">Identities &amp; Ring</span></div>
     <div class="pbody">
       <p class="fld" style="margin:2px 0 16px;max-width:60ch">Build your ring <b>any one way</b> — import keys you already have, or generate fresh ones. You don't need to do both.</p>
 
@@ -212,7 +209,7 @@ footer code{font-family:var(--mono);color:var(--accent);font-size:12.5px}
 
   <!-- 02 SIGN -->
   <section class="panel">
-    <div class="phead"><span class="pnum">02</span><span class="ptitle">Sign Anonymously</span><span class="phint" id="signerHint">No signer selected yet.</span></div>
+    <div class="phead"><span class="pnum">02</span><span class="ptitle">Sign Anonymously</span></div>
     <div class="pbody">
       <label class="fld" for="msg">Message</label>
       <textarea id="msg">This is a secret message to the group.</textarea>
@@ -225,14 +222,14 @@ footer code{font-family:var(--mono);color:var(--accent);font-size:12.5px}
 
   <!-- 03 VERIFY -->
   <section class="panel">
-    <div class="phead"><span class="pnum">03</span><span class="ptitle">Verify</span><span class="phint">Anyone can run this — no private keys required.</span></div>
+    <div class="phead"><span class="pnum">03</span><span class="ptitle">Verify</span></div>
     <div class="pbody">
       <label class="fld" for="vsig">Signature <span style="color:var(--dimmer)">(ringX…)</span></label>
       <textarea id="vsig" placeholder="paste a signature, or sign one above"></textarea>
       <div class="row" style="margin:6px 0 12px"><button class="ghost iconbtn" id="loadLast" disabled>↑ load last signature</button></div>
       <label class="fld" for="vmsg">Message</label>
       <textarea id="vmsg">This is a secret message to the group.</textarea>
-      <label class="fld" for="vring" style="margin-top:12px">Ring — one public key per line, <b style="color:var(--accent)">exact same order</b></label>
+      <label class="fld" for="vring" style="margin-top:12px">Ring — one public key per line, <b>exact same order</b></label>
       <textarea id="vring" style="min-height:90px" placeholder="public keys, one per line"></textarea>
       <div class="row" style="margin:6px 0 0"><button class="ghost iconbtn" id="loadRing">↑ load current ring</button>
       <button class="primary" id="verifyBtn">✓ Verify</button></div>
@@ -981,7 +978,7 @@ function render(){
   const crSig=$('#cr-sig');crSig.textContent=lastSig?'signature ✓':'no signature';crSig.classList.toggle('on',!!lastSig);
   // signer + sign button
   const s=signerObj();
-  $('#signerHint').textContent=s?('Signing as '+s.label+' — hidden in the ring'):'Select a signer below.';
+  var _sh=$('#signerHint'); if(_sh)_sh.textContent=s?('Signing as '+s.label+' — hidden in the ring'):'Select a signer below.';
   $('#signBtn').disabled=!(s && rs>=2);
 }
 

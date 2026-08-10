@@ -30,8 +30,8 @@ To stop the server, press `Ctrl+C`.
 
 ## Notes
 
-- Fonts load from Google Fonts, so the first load needs an internet connection;
-  everything else is self-contained and runs entirely in the browser.
+- The site is fully self-contained — it uses system fonts and makes no external
+  requests, so it runs entirely offline in your browser.
 - Keys and signatures in the examples are illustrative, generated from the
   names and messages — not real key material.
 - To publish: put these files at the root of a GitHub Pages repo (or any static
