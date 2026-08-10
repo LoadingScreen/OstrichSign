@@ -86,6 +86,18 @@
     mount.appendChild(card);
     mount.appendChild(dotsEl);
     var i = 0, timer = null;
+    // Reserve the tallest card's height so content below doesn't shift as it rotates.
+    function sizeToMax() {
+      card.style.setProperty("--sx-min", "0px");
+      var max = 0;
+      for (var k = 0; k < EX.length; k++) {
+        card.innerHTML = cardHTML(EX[k]);
+        var box = card.firstElementChild;
+        var h = box ? box.offsetHeight : 0;
+        if (h > max) max = h;
+      }
+      card.style.setProperty("--sx-min", max + "px");
+    }
     function render(n) {
       i = n; card.innerHTML = cardHTML(EX[n]);
       if (!reduce) { card.classList.remove("sx-anim"); void card.offsetWidth; card.classList.add("sx-anim"); }
@@ -101,6 +113,12 @@
     }
     card.addEventListener("mouseenter", stop);
     card.addEventListener("mouseleave", start);
+    var rt = null;
+    window.addEventListener("resize", function () {
+      clearTimeout(rt);
+      rt = setTimeout(function () { sizeToMax(); card.innerHTML = cardHTML(EX[i]); }, 150);
+    });
+    sizeToMax();
     render(0); start();
   }
 
