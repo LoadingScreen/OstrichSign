@@ -17,7 +17,7 @@
   --accent-hover:#33507a;
   --accent-soft:rgba(63,93,143,.10);
   --accent2:#2c7a72;
-  --serif:Georgia,'Times New Roman',Times,serif;
+  --serif:Helvetica,Arial,sans-serif;
   --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace;
 }
 html[data-theme="dark"]{
