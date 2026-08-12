@@ -1101,8 +1101,8 @@ $('#verifyBtn').onclick=()=>{
   if(ring.length<2){out.innerHTML=verdict('invalid','INVALID','The ring needs at least two public keys.');return;}
   try{
     const ok=NS.verify(sig,msg,ring);
-    if(ok)out.innerHTML=verdict('valid','VALID','The signature was produced by <b>one of the '+ring.length+'</b> public keys in this ring, for this exact message. The signer\'s identity stays hidden.');
-    else out.innerHTML=verdict('invalid','INVALID','Rejected. The message, the ring, or its <b>order</b> doesn\'t match what was signed — or the signature is forged.');
+    if(ok)out.innerHTML=verdict('valid','VALID','The signature was produced by <b>one of the '+ring.length+'</b> public keys in this ring, for this message. The signer\'s identity cannot be computed.');
+    else out.innerHTML=verdict('invalid','INVALID','Rejected. The message, the ring, or its <b>order</b> doesn\'t match what was signed, or the signature is forged.');
   }catch(e){out.innerHTML=verdict('invalid','ERROR',e.message);}
 };
 function verdict(kind,badge,text){
