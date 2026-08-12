@@ -17,16 +17,7 @@ then open <http://localhost:8000> in your browser. (Any static server works —
 
 To stop the server, press `Ctrl+C`.
 
-## What's here
 
-- `index.html` — home, with the rotating example in the hero
-- `examples.html` — all examples, with explanations
-- `about.html`, `console.html`, `faq.html`, `reading.html` — the rest of the site
-- `site.css` — all styling
-- `examples.js` — **the only file you edit to change examples** (messages,
-  titles, rings, order). The homepage hero shows the first four; the examples
-  page shows them all. Edit, save, refresh.
-- `signed-card.js` — shared renderer for the example cards (no need to edit)
 
 ## Notes
 
@@ -34,5 +25,4 @@ To stop the server, press `Ctrl+C`.
   requests, so it runs entirely offline in your browser.
 - Keys and signatures in the examples are illustrative, generated from the
   names and messages — not real key material.
-- To publish: put these files at the root of a GitHub Pages repo (or any static
-  host). No configuration needed.
+
