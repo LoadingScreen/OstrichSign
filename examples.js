@@ -49,6 +49,20 @@ window.OS_EXAMPLES = [
       { name: "sawtoothsam" },
     ] },
 
+  { title: "Safety commitments dropped",
+    msg: "Our safety policy doesn't reflect what's happening inside. The eval commitments we published were skipped for the last two versions in order to meet the launch schedule. The safety policy on the website still references those commitments as though they're active, which is false. I'm one of the following people on the alignment team.",
+    about: "An AI alignment teammember blows the whistle on cut corners.",
+    members: [
+      { name: "Daniel Okonkwo", title: "Research Lead"},
+      { name: "Anika Iyer" },
+      { name: "Thomas Reilly" },
+      { name: "Wei Zhang" },
+      { name: "Sophie Marchetti" },
+      { name: "Hannah Brooks"},
+      { name: "Arjun Mehta"},
+      { name: "Lena Fischer" },
+    ] },
+   
   { title: "Won't survive replication",
     msg: "I'm an author on the paper you're replicating. The effect in Figure 3 is far more fragile than the paper admits, and we all knew it before we submitted. You can save yourselves weeks of effort by starting there.",
     about: "An author on a shaky academic paper reveals the part that will fail to replicate.",
@@ -63,21 +77,21 @@ window.OS_EXAMPLES = [
     ] },
 
   { title: "Controversial reading recommendation",
-    msg: "Saw your post. If you're really looking for new perspectives, I think you should check out Francis Q. Walton's top-rated posts. Some people say he's pure evil and that no decent person would ever read his blog. I think he's got some useful things to say. You can judge for yourself.",
+    msg: "Saw your post. If you're really looking for new perspectives, I think you should check out Francis Q. Walton's top-rated posts. People say he's pure evil and that no decent person would ever read his blog. I think he's got some useful things to say. You can judge for yourself.",
     about: "Responding to a request for reading recommendations with a controversial suggestion.",
     members: [
       { name: "Joey Dillon", },
       { name: "Conor Walsh",},
-      { name: "Serena Dawson"},
+      { name: "Sarah Kaplan"},
       { name: "David Kelly",},
       { name: "Damian Ballard" },
       { name: "Shane O'Moore" },
-      { name: "Tomasz Kowalski", pic: "initials" },
+      { name: "Eric Wu", pic: "initials" },
       { name: "Matthew Lyons"},
     ] },
 
   { title: "Objection to an invitation",
-    msg: "To the festival board, from an anonymous committee member: There are public allegations against the headliner but the booking was summarily approved anyway. For the sake of accountability, we really ought to hold a secret ballot vote before the lineup goes public. If his slot survives the vote, so be it. But it shouldn't survive on the assumption that nobody minded.",
+    msg: "To the festival board, From a committee member who'd prefer not to be named. There are multiple public allegations against the headliner we've just booked. The booking was approved without any real discussion, and I think that was a mistake. We don't have to automatically drop him, but we should at least hold a proper secret ballot before the lineup goes public. If the booking survives the vote, fine. But it shouldn't go forward on the assumption that everyone approves.",
     about: "Committee dissent over a controversial performer booking.",
     members: [
       { name: "Meredith Osborne"},
@@ -90,19 +104,6 @@ window.OS_EXAMPLES = [
       { name: "Olivia Tremblay" },
     ] },
 
-  { title: "Safety commitments dropped",
-    msg: "Our safety policy doesn't reflect what's happening inside. The eval commitments we published were skipped for the last two versions in order to meet the launch schedule. I'm one of the following people on the alignment team.",
-    about: "An AI alignment teammember blows the whistle on cut corners.",
-    members: [
-      { name: "Daniel Okonkwo", title: "Research Lead"},
-      { name: "Anika Iyer" },
-      { name: "Thomas Reilly" },
-      { name: "Wei Zhang" },
-      { name: "Sophie Marchetti" },
-      { name: "Hannah Brooks"},
-      { name: "Arjun Mehta"},
-      { name: "Lena Fischer" },
-    ] },
 
   { title: "The room's gone quiet",
     msg: "Someone needs to say this ahead of the general meeting: We've ejected three players this year due to completely unrelated social media posts. People have completely stopped joking around in the band room, and a lot of conversations are only happening in the parking lot now, including some important ones. People are saying it's for inclusivity, but I'm calling it cancel culture.",
