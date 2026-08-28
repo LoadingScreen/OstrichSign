@@ -1,24 +1,5 @@
 /* OstrichSign — example ring-signed messages.
-   This one file drives BOTH the homepage hero and examples.html. No build step:
-   edit, save, refresh.
-
-   HOW IT WORKS
-   • The homepage hero rotates through the FIRST FOUR examples below.
-   • examples.html shows ALL of them, in order, with their "about" notes.
-   • To reorder (or change what's in the hero), cut a whole { ... } block and
-     paste it elsewhere in the list. Trailing commas are fine.
-
-   EACH EXAMPLE
-   • title   — optional heading for the examples page.
-   • msg     — the signed message itself. Line breaks in it are preserved.
-   • about   — optional explanation for the examples page. A string, or an
-               array of strings for multiple paragraphs. Not shown in the hero.
-               title and about are independent: a scenario may have either,
-               both, or neither.
-   • members — the ring, in display order. Each member is { name, title? }:
-       { name: "Grace Adeyemi", title: "RN" }
-       { name: "Joan Pereira" }
-     name is required; title is optional and shown on its own line.
+   This one file drives BOTH the homepage hero and examples.html.
 
    Keys and signatures are illustrative and generated automatically from the
    names and message — never add real key material here.
