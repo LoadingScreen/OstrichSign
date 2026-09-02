@@ -58,10 +58,9 @@
   }
   function cardHTML(ex) {
     var members = shuffle(ex.members, ex.msg);
-    var n = members.length;
     return '<div class="signed">'
       + '<p class="signed-msg">\u201C' + esc(ex.msg) + '\u201D</p>'
-      + '<div class="signed-sec"><div class="signed-k">ring \u00b7 ' + n + ' public keys</div>'
+      + '<div class="signed-sec">'
       + '<ul class="signed-keys">' + members.map(rowHTML).join("") + "</ul></div>"
       + '<div class="signed-sec"><div class="signed-k">signature</div>'
       + '<div class="signed-sig"><span class="pfx">ringX</span>' + sigFor(ex) + "</div></div></div>";

@@ -154,7 +154,7 @@ footer .fnav a:hover{color:var(--accent)}
 .signed-msg{font-size:18px;line-height:1.52;color:var(--ink);margin:0;padding:18px 20px 18px;font-style:italic;white-space:pre-line}
 .signed-sec{border-top:1px solid var(--rule);padding:14px 20px}
 .signed-k{font-family:var(--mono);font-size:11px;letter-spacing:.07em;color:var(--faint);text-transform:uppercase}
-.signed-keys{list-style:none;margin:11px 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:14px 22px}
+.signed-keys{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:14px 22px}
 .idrow{min-width:0}
 .idmeta{display:flex;flex-direction:column;gap:2px;min-width:0}
 .idname{font-family:var(--serif);font-size:14px;color:var(--ink);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
