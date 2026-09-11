@@ -51,12 +51,9 @@ header{border:0;background:transparent}
 .brandrow{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
 h1{font-family:var(--display);font-weight:600;letter-spacing:-.01em;font-size:clamp(30px,6vw,48px);margin:0;color:var(--ink)}
 h1 .ring{color:inherit}
-.tag{font-family:var(--mono);font-size:11.5px;color:var(--dimmer);letter-spacing:.02em}
 .sub{color:var(--dim);margin:16px 0 0;max-width:60ch;font-size:16px;line-height:1.62}
+.tag{font-family:var(--mono);font-size:11.5px;color:var(--dimmer);letter-spacing:.02em}
 .sub b{color:var(--ink);font-weight:600}
-.crumbs{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap;font-size:13px;color:var(--dimmer)}
-.crumbs span{border:1px solid var(--line);padding:3px 10px;border-radius:20px}
-.crumbs span.on{color:var(--green);border-color:var(--green-soft)}
 
 /* panels */
 .panel{border:1px solid var(--line);background:var(--panel);margin-top:22px;border-radius:5px}
@@ -68,7 +65,7 @@ h1 .ring{color:inherit}
 .orline:before,.orline:after{content:"";height:1px;background:var(--line);flex:1}
 .pbody{padding:4px 20px 20px}
 label.fld{display:block;font-size:14px;color:var(--dim);margin:0 0 7px}
-label.fld b{color:var(--accent);font-weight:600}
+label.fld b{color:var(--ink);font-weight:600}
 textarea,input[type=text],select{
   width:100%;background:var(--input-bg);color:var(--ink);border:1px solid var(--line);
   font-family:var(--mono);font-size:13px;padding:10px 12px;border-radius:3px;outline:none;resize:vertical}
@@ -99,11 +96,9 @@ button:disabled:hover{border-color:var(--line);color:var(--ink);background:trans
 .idsel{display:flex;flex-direction:column;gap:6px;align-items:center}
 .idmeta{min-width:0}
 .idname{font-weight:600;font-size:15px}
-.idname .fmt{font-family:var(--mono);color:var(--dimmer);font-weight:400;font-size:10.5px;margin-left:6px;letter-spacing:.04em}
-.fmtmini{font-family:var(--mono);font-size:10.5px;letter-spacing:.02em;color:var(--accent);background:transparent;border:1px solid var(--line);border-radius:3px;padding:2px 7px;margin-left:8px;cursor:pointer;width:auto;min-width:0;appearance:none}
-.fmtmini:hover{border-color:var(--accent-line)}
 .exttag{font-family:var(--mono);color:var(--dimmer);font-weight:400;font-size:10.5px;margin-left:6px;letter-spacing:.04em}
 .idkey{font-family:var(--mono);color:var(--dim);font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+.idkey .kl{color:var(--dimmer);display:inline-block;width:3.2em}
 .idkey:hover{color:var(--accent)}
 .idactions{display:flex;gap:6px;align-items:center}
 .chk{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--dim);cursor:pointer;user-select:none}
@@ -168,11 +163,6 @@ footer code{font-family:var(--mono);color:var(--accent);font-size:12.5px}
         <!-- <span class="tag">secp256k1 · SAG ring signatures</span> -->
       </div>
       <p class="sub">Build a ring of Nostr public keys, sign anonymously with any member's private key, and let anyone verify the signature came from the ring.</p>
-      <!-- <div class="crumbs" id="crumbs">
-        <span id="cr-ids">0 identities</span>
-        <span id="cr-ring">ring: 0</span>
-        <span id="cr-sig">no signature</span>
-      </div> -->
     </div>
   </header>
 
@@ -182,28 +172,21 @@ footer code{font-family:var(--mono);color:var(--accent);font-size:12.5px}
     <div class="pbody">
       <!-- <p class="fld" style="margin:2px 0 16px;max-width:60ch">Build your ring by importing keys you already have or by generating new ones.</p> -->
 
-      <label class="fld" for="importKey">Import existing keys</label>
+      <label class="fld">Try it with throwaway keys</label>
+      <div class="row">
+        <button class="primary" id="seedDemo">+ Generate ×4 (demo ring)</button>
+        <button id="gen">+ Generate one</button>
+      </div>
+      <p class="note" style="margin:8px 0 0;max-width:60ch">Generated keys are fresh Nostr keypairs that exist only in this page. Public keys are shown as x-only hex and as an npub.</p>
+
+      <div class="orline"><span>or import existing keys</span></div>
+
       <div class="row">
         <input type="text" class="grow" id="importKey" placeholder="paste an npub, nsec, or hex key — an nsec joins as a signer, an npub only widens the ring…">
         <button class="primary" id="importBtn">⤓ Import</button>
       </div>
 
-      <div class="orline"><span>or generate your own</span></div>
-
-      <div class="row" style="align-items:flex-end">
-        <button id="gen">+ Generate one</button>
-        <button class="ghost" id="seedDemo">+ Generate ×4 (demo ring)</button>
-        <div>
-          <label class="fld" for="fmtsel">Public-key format</label>
-          <select id="fmtsel" style="min-width:240px" title="How a generated public key is written. All three encode the same key.">
-            <option value="xonly">x-only — Nostr / npub style · 32 bytes</option>
-            <option value="compressed">compressed — Bitcoin style · 33 bytes</option>
-            <option value="uncompressed">uncompressed — full x,y point · 65 bytes</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="idlist" id="idlist"><div class="empty">No identities yet. Import a key above, or generate one — each generated key is a keypair you control. Tick the ones to include in the ring, then choose one to sign as.</div></div>
+      <div class="idlist" id="idlist"><div class="empty">No identities yet. Generate a demo ring to try signing and verifying, or import a key above. Tick the ones to include in the ring, then choose one to sign as.</div></div>
     </div>
   </section>
 
@@ -937,10 +920,9 @@ if(typeof window!=='undefined')window.NostringerJS=NostringerJS;
 /* ================= UI ================= */
 const $=s=>document.querySelector(s);
 const NS=window.NostringerJS;
-let identities=[];   // {id,label,priv,pub,fmt,owned,inRing,signer}
-let extKeys=[];      // {id,label,pub,inRing}  (ring-only, no privkey)
+let identities=[];   // {label,priv,pub,inRing,signer}   pub is x-only hex
+let extKeys=[];      // {label,pub,inRing}               pub as pasted (64/66/130 hex)
 let counter=0;
-let signFmt='xonly';
 let lastSig=null;
 
 function toast(t){const el=$('#toast');el.textContent=t;el.classList.add('show');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('show'),1400);}
@@ -956,26 +938,25 @@ function currentRing(){ // ordered: identities in ring, then external in ring
   return a.concat(b);
 }
 function signerObj(){return identities.find(i=>i.signer&&i.inRing);}
-// re-encode a member's public key into its currently selected format
-function recomputePub(o,owned){
-  o.pub = owned ? NS.pubkeyInFormat(o.priv,o.fmt) : NS.convertPubkey(o.pubRaw,o.fmt);
+// npub for a public key, when it is x-only (64 hex); other encodings have no npub form
+function npubOf(pubHex){return pubHex.length===64?NS.npubEncode(pubHex):null;}
+function mkKeyLine(lbl,val,copyLabel){
+  const d=document.createElement('div');d.className='idkey';d.title='click to copy '+copyLabel;
+  const k=document.createElement('span');k.className='kl';k.textContent=lbl;
+  d.appendChild(k);d.appendChild(document.createTextNode(short(val)));
+  d.onclick=()=>copy(val,copyLabel);return d;
 }
-function detectFmt(hex){return hex.length===64?'xonly':hex.length===66?'compressed':'uncompressed';}
 
 function render(){
   const list=$('#idlist');
   const all=[...identities,...extKeys];
-  if(all.length===0){list.innerHTML='<div class="empty">No identities yet. Import a key above, or generate one — each generated key is a keypair you control. Tick the ones to include in the ring, then choose one to sign as.</div>';}
+  if(all.length===0){list.innerHTML='<div class="empty">No identities yet. Generate a demo ring to try signing and verifying, or import a key above. Tick the ones to include in the ring, then choose one to sign as.</div>';}
   else{
     list.innerHTML='';
     identities.forEach(i=>list.appendChild(idRow(i,true)));
     extKeys.forEach(e=>list.appendChild(idRow(e,false)));
   }
-  // crumbs
-  $('#cr-ids').textContent=identities.length+' identit'+(identities.length===1?'y':'ies');
   const rs=currentRing().length;
-  const crRing=$('#cr-ring');crRing.textContent='ring: '+rs;crRing.classList.toggle('on',rs>=2);
-  const crSig=$('#cr-sig');crSig.textContent=lastSig?'signature ✓':'no signature';crSig.classList.toggle('on',!!lastSig);
   // signer + sign button
   const s=signerObj();
   var _sh=$('#signerHint'); if(_sh)_sh.textContent=s?('Signing as '+s.label+' — hidden in the ring'):'Select a signer below.';
@@ -1005,25 +986,15 @@ function idRow(o,owned){
   const nm=document.createElement('div');nm.className='idname';
   nm.appendChild(document.createTextNode(o.label));
   if(!owned){const ex=document.createElement('span');ex.className='exttag';ex.textContent='external';nm.appendChild(ex);}
-  const fsel=document.createElement('select');fsel.className='fmtmini';fsel.title='switch public-key format (same key)';
-  [['xonly','x-only'],['compressed','compressed'],['uncompressed','uncompressed']].forEach(([val,lbl])=>{
-    const op=document.createElement('option');op.value=val;op.textContent=lbl;if(o.fmt===val)op.selected=true;fsel.appendChild(op);
-  });
-  fsel.onchange=()=>{o.fmt=fsel.value;recomputePub(o,owned);render();};
-  nm.appendChild(fsel);
-  const key=document.createElement('div');key.className='idkey';key.title='click to copy public key';
-  key.textContent='pk '+short(o.pub);
-  key.onclick=()=>copy(o.pub,'pubkey');
-  meta.appendChild(nm);meta.appendChild(key);div.appendChild(meta);
+  meta.appendChild(nm);
+  meta.appendChild(mkKeyLine('hex',o.pub,'public key hex'));
+  const np=npubOf(o.pub);
+  if(np)meta.appendChild(mkKeyLine('npub',np,'npub'));
+  div.appendChild(meta);
   // actions
   const act=document.createElement('div');act.className='idactions';
   if(owned){
-    if(o.fmt==='xonly'){
-      act.appendChild(mkbtn('npub',()=>copy(NS.npubFromPriv(o.priv),'npub')));
-      act.appendChild(mkbtn('nsec',()=>copy(NS.nsecFromPriv(o.priv),'nsec')));
-    }else{
-      act.appendChild(mkbtn('copy sk',()=>copy(o.priv,'private key')));
-    }
+    act.appendChild(mkbtn('nsec',()=>copy(NS.nsecFromPriv(o.priv),'nsec')));
   }
   const del=document.createElement('button');del.className='iconbtn ghost';del.textContent='✕';del.title='remove';
   del.onclick=()=>{if(owned)identities=identities.filter(x=>x!==o);else extKeys=extKeys.filter(x=>x!==o);render();};
@@ -1034,16 +1005,19 @@ function idRow(o,owned){
 function nextLabel(){counter++;return 'Member '+String(counter).padStart(2,'0');}
 
 /* generate */
+// always x-only: generateKeypairHex('xonly') negates sk when needed so the
+// private key maps to the even-y point that the x-only encoding denotes.
+function newIdentity(label,signer){
+  const kp=NS.generateKeypairHex('xonly');
+  return {label,priv:kp.private_key_hex,pub:kp.public_key_hex,inRing:true,signer};
+}
 $('#gen').onclick=()=>{
-  const kp=NS.generateKeypairHex(signFmt);
-  identities.push({label:nextLabel(),priv:kp.private_key_hex,pub:NS.pubkeyInFormat(kp.private_key_hex,signFmt),fmt:signFmt,inRing:true,signer:identities.every(i=>!i.signer)});
+  identities.push(newIdentity(nextLabel(),identities.every(i=>!i.signer)));
   render();
 };
-$('#fmtsel').onchange=e=>{signFmt=e.target.value;};
 $('#seedDemo').onclick=()=>{
-  identities=[];extKeys=[];counter=0;
-  const fmts=['xonly','compressed','xonly','uncompressed'];
-  fmts.forEach((f,idx)=>{const kp=NS.generateKeypairHex(f);identities.push({label:nextLabel(),priv:kp.private_key_hex,pub:NS.pubkeyInFormat(kp.private_key_hex,f),fmt:f,inRing:true,signer:idx===1});});
+  identities=[];extKeys=[];counter=0;lastSig=null;$('#signOut').innerHTML='';$('#loadLast').disabled=true;
+  for(let idx=0;idx<4;idx++)identities.push(newIdentity(nextLabel(),idx===1));
   render();toast('Generated 4 demo members');
 };
 $('#importBtn').onclick=()=>{
@@ -1052,15 +1026,15 @@ $('#importBtn').onclick=()=>{
   try{
     if(v.toLowerCase().startsWith('nsec')){
       const d=NS.decodeNostrEntity(v);
-      counter++;identities.push({label:'Imported '+pad(counter),priv:d.hex,pub:NS.pubkeyInFormat(d.hex,'xonly'),fmt:'xonly',inRing:true,signer:identities.every(i=>!i.signer)});
+      counter++;identities.push({label:'Imported '+pad(counter),priv:d.hex,pub:NS.xonlyPubFromPriv(d.hex),inRing:true,signer:identities.every(i=>!i.signer)});
       toast('nsec imported — can sign');
     }else if(v.toLowerCase().startsWith('npub')||v.toLowerCase().startsWith('nprofile')){
       const d=NS.decodeNostrEntity(v);
-      counter++;extKeys.push({label:'External '+pad(counter),pubRaw:d.hex,pub:d.hex,fmt:detectFmt(d.hex),inRing:true});
+      counter++;extKeys.push({label:'External '+pad(counter),pub:d.hex,inRing:true});
       toast('npub added to ring');
     }else{
-      const hex=v.toLowerCase();NS.parsePubkeyHex(hex); // validate
-      counter++;extKeys.push({label:'External '+pad(counter),pubRaw:hex,pub:hex,fmt:detectFmt(hex),inRing:true});
+      const hex=v.toLowerCase();NS.parsePubkeyHex(hex); // validate: x-only(64) / compressed(66) / uncompressed(130) all accepted
+      counter++;extKeys.push({label:'External '+pad(counter),pub:hex,inRing:true});
       toast('pubkey added to ring');
     }
     $('#importKey').value='';render();
