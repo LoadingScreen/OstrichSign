@@ -101,6 +101,7 @@ button:disabled:hover{border-color:var(--line);color:var(--ink);background:trans
 .idkey .kl{color:var(--dimmer);display:inline-block;width:3.2em}
 .idkey:hover{color:var(--accent)}
 .idactions{display:flex;gap:6px;align-items:center}
+.iddel{margin-left:26px}
 .chk{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--dim);cursor:pointer;user-select:none}
 .chk input{accent-color:var(--accent);width:15px;height:15px;cursor:pointer}
 .iconbtn{padding:6px 11px;font-size:13px}
@@ -135,6 +136,7 @@ footer code{font-family:var(--mono);color:var(--accent);font-size:12.5px}
 @media(max-width:560px){
   .idrow{grid-template-columns:auto 1fr;grid-template-areas:"sel meta" "act act"}
   .idsel{grid-area:sel}.idmeta{grid-area:meta}.idactions{grid-area:act;justify-content:flex-start;margin-top:2px}
+  .iddel{margin-left:auto}
   .sitenav .links{margin-left:0;width:100%}
 }
 </style>
@@ -168,31 +170,28 @@ footer code{font-family:var(--mono);color:var(--accent);font-size:12.5px}
 
   <!-- 01 IDENTITIES -->
   <section class="panel">
-    <div class="phead"><span class="pnum">01</span><span class="ptitle">Identities &amp; Ring</span></div>
+    <div class="phead"><span class="pnum">1</span><span class="ptitle">Identities &amp; Ring</span></div>
     <div class="pbody">
       <!-- <p class="fld" style="margin:2px 0 16px;max-width:60ch">Build your ring by importing keys you already have or by generating new ones.</p> -->
 
-      <label class="fld">Try it with throwaway keys</label>
       <div class="row">
         <button class="primary" id="seedDemo">+ Generate ×4 (demo ring)</button>
         <button id="gen">+ Generate one</button>
       </div>
-      <p class="note" style="margin:8px 0 0;max-width:60ch">Generated keys are fresh Nostr keypairs that exist only in this page. Public keys are shown as x-only hex and as an npub.</p>
-
-      <div class="orline"><span>or import existing keys</span></div>
+      <div class="orline"><span>or import</span></div>
 
       <div class="row">
         <input type="text" class="grow" id="importKey" placeholder="paste an npub, nsec, or hex key">
         <button class="primary" id="importBtn">⤓ Import</button>
       </div>
 
-      <div class="idlist" id="idlist"><div class="empty">No identities yet. Generate a demo ring to try signing and verifying, or import a key above. Tick the ones to include in the ring, then choose one to sign as.</div></div>
+      <div class="idlist" id="idlist"><div class="empty">No identities yet.</div></div>
     </div>
   </section>
 
   <!-- 02 SIGN -->
   <section class="panel">
-    <div class="phead"><span class="pnum">02</span><span class="ptitle">Sign Anonymously</span></div>
+    <div class="phead"><span class="pnum">2</span><span class="ptitle">Sign Anonymously</span></div>
     <div class="pbody">
       <label class="fld" for="msg">Message</label>
       <textarea id="msg">This is a secret message to the group.</textarea>
@@ -205,7 +204,7 @@ footer code{font-family:var(--mono);color:var(--accent);font-size:12.5px}
 
   <!-- 03 VERIFY -->
   <section class="panel">
-    <div class="phead"><span class="pnum">03</span><span class="ptitle">Verify</span></div>
+    <div class="phead"><span class="pnum">3</span><span class="ptitle">Verify</span></div>
     <div class="pbody">
       <label class="fld" for="vsig">Signature <span style="color:var(--dimmer)">(ringX…)</span></label>
       <textarea id="vsig" placeholder="paste or load a signature"></textarea>
@@ -950,7 +949,7 @@ function mkKeyLine(lbl,val,copyLabel){
 function render(){
   const list=$('#idlist');
   const all=[...identities,...extKeys];
-  if(all.length===0){list.innerHTML='<div class="empty">No identities yet. Generate a demo ring to try signing and verifying, or import a key above. Tick the ones to include in the ring, then choose one to sign as.</div>';}
+  if(all.length===0){list.innerHTML='<div class="empty">No identities yet.</div>';}
   else{
     list.innerHTML='';
     identities.forEach(i=>list.appendChild(idRow(i,true)));
@@ -996,7 +995,7 @@ function idRow(o,owned){
   if(owned){
     act.appendChild(mkbtn('nsec',()=>copy(NS.nsecFromPriv(o.priv),'nsec')));
   }
-  const del=document.createElement('button');del.className='iconbtn ghost';del.textContent='✕';del.title='remove';
+  const del=document.createElement('button');del.className='iconbtn ghost iddel';del.textContent='✕';del.title='remove';
   del.onclick=()=>{if(owned)identities=identities.filter(x=>x!==o);else extKeys=extKeys.filter(x=>x!==o);render();};
   act.appendChild(del);div.appendChild(act);
   return div;
@@ -1059,7 +1058,7 @@ function renderSignOut(){
     '<div class="sigtext">'+lastSig.sig+'</div>'+
     '<div class="meta"><span>ring size <b>'+lastSig.ringSize+'</b></span><span>signer <b>concealed</b></span><span>bytes <b>'+((lastSig.sig.length-5)/2)+'</b></span></div>'+
     '</div>'+
-    '<p class="note">A verifier learns only that <b style="color:var(--ink)">one of the '+lastSig.ringSize+'</b> ring members signed — never which one. The signature is fully unlinkable.</p>';
+    '<p class="note">Proves one of the '+lastSig.ringSize+' signed. Not which one.</p>';
   $('#copySig').onclick=()=>copy(lastSig.sig,'signature');
 }
 
@@ -1075,8 +1074,8 @@ $('#verifyBtn').onclick=()=>{
   if(ring.length<2){out.innerHTML=verdict('invalid','INVALID','The ring needs at least two public keys.');return;}
   try{
     const ok=NS.verify(sig,msg,ring);
-    if(ok)out.innerHTML=verdict('valid','VALID','The signature was produced by <b>one of the '+ring.length+'</b> public keys in this ring, for this message. The signer\'s identity cannot be computed.');
-    else out.innerHTML=verdict('invalid','INVALID','Rejected. The message, the ring, or its <b>order</b> doesn\'t match what was signed, or the signature is forged.');
+    if(ok)out.innerHTML=verdict('valid','VALID','Signed by <b>one of the '+ring.length+'</b> keys in this ring, for this message.');
+    else out.innerHTML=verdict('invalid','INVALID','The message, the ring, or its <b>order</b> doesn\'t match what was signed.');
   }catch(e){out.innerHTML=verdict('invalid','ERROR',e.message);}
 };
 function verdict(kind,badge,text){
