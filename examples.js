@@ -86,20 +86,6 @@ window.OS_EXAMPLES = [
     ] },
 
 
-  { title: "The room's gone quiet",
-    msg: "Someone needs to say this ahead of the general meeting: We've ejected three players this year due to completely unrelated social media posts. People have completely stopped joking around in the band room, and a lot of conversations are only happening in the parking lot now, including some important ones. People are saying it's for inclusivity, but I'm calling it cancel culture.",
-    about: "A brass bandmate complains about capricious expulsions from the band.",
-    members: [
-      { name: "Keith Sutcliffe", title: "Chair"},
-      { name: "Janet Hargreaves", title: "Band Secretary" },
-      { name: "Brian Ackroyd" },
-      { name: "Susan Whitaker"},
-      { name: "Colin Dyson" },
-      { name: "Margaret Ogden" },
-      { name: "David Broadbent"},
-      { name: "Pauline Metcalfe" },
-    ] },
-
   { title: "MMO Guild drama",
     msg: "One of the loot council signed this. The Mythic-track chest didn't drop the way you were told in the recap — the item went to an officer's alt before anyone else was considered, and the 'contested roll' never happened. I'm on the council, I was in the channel, and I'm not willing to keep quiet about it.",
     about: "A guild officer flagging loot distribution discrepancies members can't see.",
@@ -113,6 +99,20 @@ window.OS_EXAMPLES = [
       { name: "veyra" },
     ] },
 
+  { title: "The room's gone quiet",
+    msg: "Someone needs to say this ahead of the general meeting: We've ejected three players this year due to completely unrelated social media posts. People have completely stopped joking around in the band room, and a lot of conversations are only happening in the parking lot now, including some important ones. People are saying it's for inclusivity, but I'm calling it cancel culture.",
+    about: "A brass bandmate complains about capricious expulsions from the band.",
+    members: [
+      { name: "Keith Sutcliffe", title: "Chair"},
+      { name: "Janet Hargreaves", title: "Band Secretary" },
+      { name: "Brian Ackroyd" },
+      { name: "Susan Whitaker"},
+      { name: "Colin Dyson" },
+      { name: "Margaret Ogden" },
+      { name: "David Broadbent"},
+      { name: "Pauline Metcalfe" },
+    ] },
+   
   { title: "Bob the whistleblower",
     msg: "You asked for proof. The Prime Minister personally ordered the contract audit buried, and the file that proves it still exists. I am one of the following cabinet members, and for the purposes of this disclosure you may call me Bob.",
     about: "A remix of the original example from the 2001 paper 'How to Leak a Secret' by Rivest, Shamir, & Tauman.",
